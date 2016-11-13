@@ -1,29 +1,21 @@
 package com.example.hoyoung.eyeload;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+
 
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.view.View.OnTouchListener;
 
 import java.text.DecimalFormat;
@@ -129,8 +121,8 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
             arView.postInvalidate();
         }
     }
-    private static float calcZoomLevel(){
-        int myZoomLevel = 100;
+    private static float calcZoomLevel(){ //0m~100km까지 나타내는 것을 100범위로 표현
+        int myZoomLevel = 3;//120m반경
         float out = 0;
 
         float percent = 0;
@@ -154,7 +146,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
         float zoomLevel=calcZoomLevel();
         ARData.setRadius(zoomLevel);
         ARData.setZoomLevel(FORMAT.format(zoomLevel));
-        ARData.setZoomProgress(50);
+        ARData.setZoomProgress(3);
         Location last = ARData.getCurrentLocation();
         updateData(last.getLatitude(),last.getLongitude(),last.getAltitude());
     }
@@ -204,7 +196,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
         List<Marker> markers =new ArrayList<Marker>();
         Marker d=new Marker("Lab",37.5583037 ,126.9984677,90, Color.RED, bitmap );
         markers.add(d);
-        Marker c=new Marker("Fuck3",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
+        Marker c=new Marker("Testing",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
         markers.add(c);
 
         ARData.addMarkers(markers);
