@@ -1,14 +1,8 @@
-package cpackage
-
-import android.view.View;
-
-com.example.hoyoung.eyeload;
+package com.example.hoyoung.eyeload;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
-
-import com.example.hoyoung.eyeload.ARActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +17,8 @@ public class ARView extends View {
     private static final AtomicBoolean drawing = new AtomicBoolean(false);
 
     private static final float[] locationArray = new float[3];
-    private static final List<com.example.hoyoung.eyeload.Marker> cache = new ArrayList<com.example.hoyoung.eyeload.Marker>();
-    private static final TreeSet<com.example.hoyoung.eyeload.Marker> updated = new TreeSet<com.example.hoyoung.eyeload.Marker>();
+    private static final List<Marker> cache = new ArrayList<Marker>();
+    private static final TreeSet<Marker> updated = new TreeSet<Marker>();
     private static final int COLLISION_ADJUSTMENT = 100;
 
     public ARView(Context context){
@@ -35,10 +29,10 @@ public class ARView extends View {
     protected void onDraw(Canvas canvas){
         if (canvas==null) return;
         if (drawing.compareAndSet(false, true)) {
-            List<com.example.hoyoung.eyeload.Marker> collection = com.example.hoyoung.testproject.ARData.getMarkers();
+            List<Marker> collection = ARData.getMarkers();
 
             cache.clear();
-            for (com.example.hoyoung.eyeload.Marker m : collection) {
+            for (Marker m : collection) {
                 m.update(canvas, 0, 0);
                 if (m.isOnRadar()) cache.add(m);
             }
@@ -46,9 +40,9 @@ public class ARView extends View {
 
             if (ARActivity.useCollisionDetection) adjustForCollisions(canvas,collection);
 
-            ListIterator<com.example.hoyoung.eyeload.Marker> iter = collection.listIterator(collection.size());
+            ListIterator<Marker> iter = collection.listIterator(collection.size());
             while (iter.hasPrevious()) {
-                com.example.hoyoung.eyeload.Marker marker = iter.previous();
+                Marker marker = iter.previous();
                 marker.draw(canvas);
             }
            // if (ARActivity.showRadar) radar.draw(canvas);
@@ -56,13 +50,13 @@ public class ARView extends View {
         }
     }
 
-    private static void adjustForCollisions(Canvas canvas, List<com.example.hoyoung.eyeload.Marker> collection) {
+    private static void adjustForCollisions(Canvas canvas, List<Marker> collection) {
         updated.clear();
-        for (com.example.hoyoung.eyeload.Marker marker1 : collection) {
+        for (Marker marker1 : collection) {
             if (updated.contains(marker1) || !marker1.isInView()) continue;
 
             int collisions = 1;
-            for (com.example.hoyoung.eyeload.Marker marker2 : collection) {
+            for (Marker marker2 : collection) {
                 if (marker1.equals(marker2) || updated.contains(marker2) || !marker2.isInView()) continue;
 
                 if (marker1.isMarkerOnMarker(marker2)) {

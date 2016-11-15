@@ -10,10 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.hoyoung.eyeload.MakingMemoAcitivity;
-import com.example.hoyoung.eyeload.MeetingControl;
-import com.example.hoyoung.eyeload.MeetingInfoActivity;
-
 public class MeetingListActivity extends AppCompatActivity {
 
     private MeetingControl control;

@@ -49,7 +49,7 @@ public class MemoControl extends BaseAdapter {
         return convertView;
     }
 
-    public ArrayList<com.example.hoyoung.testproject.MemoDTO> getMemoList()
+    public ArrayList<MemoDTO> getMemoList()
     {
         return listViewItemList;
     }
@@ -69,7 +69,7 @@ public class MemoControl extends BaseAdapter {
     //함수가 호출되는 부분에 구현부분을 DTO의 get,set으로 작성하고 이 함수는 지우면 된다.
     //아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
     public void addMemoDTO(String title, String desc) {
-        com.example.hoyoung.testproject.MemoDTO item = new MemoDTO();
+        MemoDTO item = new MemoDTO();
 
         item.setTitle(title);
         item.setDesc(desc);

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_notes"/>
 
-    <Button android:id="@+id/android:memo"
+    <Button android:id="@+id/memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add memo"/>

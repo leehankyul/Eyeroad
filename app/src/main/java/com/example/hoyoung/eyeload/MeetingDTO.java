@@ -1,6 +1,5 @@
 package com.example.hoyoung.eyeload;
-
-public class MeetingDTO extends DTO {
+public class MeetingDTO extends DTO{
     // listView에 접목시키기 위한 test용 필드
     // 구현 시 실제 DTO의 필드를 listview에 적용해야되는 수정필요
     ////////////////////////////////////////////////////////////////

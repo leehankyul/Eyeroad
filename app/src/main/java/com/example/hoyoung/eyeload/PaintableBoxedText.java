@@ -1,12 +1,11 @@
 package com.example.hoyoung.eyeload;
 
+import java.text.BreakIterator;
+import java.util.ArrayList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import java.text.BreakIterator;
-import java.util.ArrayList;
-
-public class PaintableBoxedText extends com.example.hoyoung.eyeload.PaintableObject {
+public class PaintableBoxedText extends PaintableObject {
     private float width=0, height=0;
 	private float areaWidth=0, areaHeight=0;
 	private ArrayList<String> lineList = null;

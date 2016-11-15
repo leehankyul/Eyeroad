@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class MeetingControl extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<MeetingDTO> listViewItemList = new ArrayList<com.example.hoyoung.eyeload.MeetingDTO>() ;
+    private ArrayList<MeetingDTO> listViewItemList = new ArrayList<MeetingDTO>() ;
 
     // ListViewAdapter의 생성자
     public MeetingControl() {}
@@ -40,7 +40,7 @@ public class MeetingControl extends BaseAdapter {
         TextView descTextView = (TextView) convertView.findViewById(R.id.textView2) ;
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        com.example.hoyoung.eyeload.MeetingDTO listViewItem = listViewItemList.get(position);
+        MeetingDTO listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
         titleTextView.setText(listViewItem.getTitle());
@@ -49,7 +49,7 @@ public class MeetingControl extends BaseAdapter {
         return convertView;
     }
 
-    public ArrayList<com.example.hoyoung.eyeload.MeetingDTO> getMeetingList()
+    public ArrayList<MeetingDTO> getMeetingList()
     {
         return listViewItemList;
     }
@@ -68,7 +68,7 @@ public class MeetingControl extends BaseAdapter {
     //함수가 호출되는 부분에 구현부분을 DTO의 get,set으로 작성하고 이 함수는 지우면 된다.
     //아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
     public void addMeetingDTO(String title, String desc) {
-        com.example.hoyoung.eyeload.MeetingDTO item = new com.example.hoyoung.testproject.MeetingDTO();
+        MeetingDTO item = new MeetingDTO();
 
         item.setTitle(title);
         item.setDesc(desc);

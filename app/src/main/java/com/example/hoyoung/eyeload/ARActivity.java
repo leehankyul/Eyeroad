@@ -1,6 +1,7 @@
 package com.example.hoyoung.eyeload;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,13 +11,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.hoyoung.testproject.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     private static final int END_TEXT_COLOR = Color.WHITE;
 
     private static PowerManager.WakeLock wakeLock=null;
-    private static com.example.hoyoung.eyeload.CameraSurface camScreen=null;
+    private static CameraSurface camScreen=null;
     private static TextView endLabel=null;
-    private static com.example.hoyoung.eyeload.ARView arView=null;
+    private static ARView arView=null;
 
     private static Bitmap bitmap=null;
 
@@ -69,20 +70,36 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
                 }
             }
         }*/
-
         super.onCreate(savedInstanceState);
-
-        camScreen = new com.example.hoyoung.eyeload.CameraSurface(this);
+        camScreen = new CameraSurface(this);
         setContentView(camScreen);
 
-        arView=new com.example.hoyoung.eyeload.ARView(this);
+        arView=new ARView(this);
         arView.setOnTouchListener(this);
 
         ViewGroup.LayoutParams arLayout=new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addContentView(arView,arLayout);
+        LayoutInflater inflator=getLayoutInflater();
+        View over_view=(View)inflator.inflate(R.layout.over,null);
+        addContentView(over_view,arLayout);
 
-
-
+        findViewById(R.id.btnMemo).setOnClickListener(
+                new Button.OnClickListener(){
+                    public  void onClick(View v)
+                    {
+                        Intent intent = new Intent(ARActivity.this, NoteEdit.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+        findViewById(R.id.btnSearch).setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ARActivity.this, SearchActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
 
         updateDataOnZoom();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -90,12 +107,11 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
 
         bitmap= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
 
-
     }
     @Override
     public void onStart(){
         super.onStart();
-        Location last = com.example.hoyoung.eyeload.ARData.getCurrentLocation();
+        Location last = ARData.getCurrentLocation();
         updateData(last.getLatitude(),last.getLongitude(),last.getAltitude());
     }
     @Override
@@ -144,16 +160,16 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     }
     private void updateDataOnZoom(){
         float zoomLevel=calcZoomLevel();
-        com.example.hoyoung.eyeload.ARData.setRadius(zoomLevel);
-        com.example.hoyoung.eyeload.ARData.setZoomLevel(FORMAT.format(zoomLevel));
-        com.example.hoyoung.eyeload.ARData.setZoomProgress(3);
-        Location last = com.example.hoyoung.eyeload.ARData.getCurrentLocation();
+        ARData.setRadius(zoomLevel);
+        ARData.setZoomLevel(FORMAT.format(zoomLevel));
+        ARData.setZoomProgress(3);
+        Location last = ARData.getCurrentLocation();
         updateData(last.getLatitude(),last.getLongitude(),last.getAltitude());
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent me) {
-        for (com.example.hoyoung.eyeload.Marker marker : com.example.hoyoung.eyeload.ARData.getMarkers()) {
+        for (Marker marker : ARData.getMarkers()) {
             if (marker.handleClick(me.getX(), me.getY())) {
                 if (me.getAction() == MotionEvent.ACTION_UP) markerTouched(marker);
                 return true;
@@ -168,7 +184,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
         updateData(location.getLatitude(),location.getLongitude(),location.getAltitude());
     }
 
-    private void markerTouched(com.example.hoyoung.eyeload.Marker marker){
+    private void markerTouched(Marker marker){
         //마커 터치 되었을때 동작.
     }
 
@@ -193,13 +209,13 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     private static boolean download( double lat, double lon, double alt){
         //DB에서 다운하는 부분
         //Bitmap a= BitmapFactory.decodeResource(this.getResources(), );
-        List<com.example.hoyoung.eyeload.Marker> markers =new ArrayList<com.example.hoyoung.eyeload.Marker>();
-        com.example.hoyoung.eyeload.Marker d=new com.example.hoyoung.eyeload.Marker("Lab",37.5583037 ,126.9984677,90, Color.RED, bitmap );
+        List<Marker> markers =new ArrayList<Marker>();
+        Marker d=new Marker("Lab",37.5583037 ,126.9984677,90, Color.RED, bitmap );
         markers.add(d);
-        com.example.hoyoung.eyeload.Marker c=new com.example.hoyoung.eyeload.Marker("Testing",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
+        Marker c=new Marker("Testing",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
         markers.add(c);
 
-        com.example.hoyoung.eyeload.ARData.addMarkers(markers);
+        ARData.addMarkers(markers);
         return true;
     }
 
