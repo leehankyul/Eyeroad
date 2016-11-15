@@ -86,7 +86,10 @@ public class SearchPlaceActivity extends Activity {
     }
 
     public void searchPath(View view){
-        Intent intent=new Intent(SearchPlaceActivity.this,TmapAcitivity.class);
+        /*
+        여기서 TmapActivity, TmapActivity2를 정한다.
+         */
+        Intent intent=new Intent(SearchPlaceActivity.this,TmapAcitivity2.class);
         HashMap<String,LatLng> coordinates=new HashMap<>();
         coordinates.put("origin",origin);
         coordinates.put("dest",dest);
