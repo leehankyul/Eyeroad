@@ -1,12 +1,12 @@
 package com.example.hoyoung.eyeload;
 
-import java.text.DecimalFormat;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
+
+import java.text.DecimalFormat;
 
 public class Marker implements Comparable<Marker> {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("@#");
@@ -26,8 +26,8 @@ public class Marker implements Comparable<Marker> {
     
     private volatile static CameraModel cam = null;
 
-    private volatile PaintableBoxedText textBox = null;
-    private volatile PaintablePosition textContainer = null;
+    private volatile com.example.hoyoung.eyeload.PaintableBoxedText textBox = null;
+    private volatile com.example.hoyoung.eyeload.PaintablePosition textContainer = null;
 
     protected final float[] symbolArray = new float[3];
     protected final float[] textArray = new float[3];
@@ -200,7 +200,7 @@ public class Marker implements Comparable<Marker> {
 	    
 		if (physicalLocation.getAltitude()==0.0) physicalLocation.setAltitude(location.getAltitude());
 		 
-		PhysicalLocationUtility.convLocationToVector(location, physicalLocation, locationXyzRelativeToPhysicalLocation);
+		com.example.hoyoung.eyeload.PhysicalLocationUtility.convLocationToVector(location, physicalLocation, locationXyzRelativeToPhysicalLocation);
 		this.initialY = locationXyzRelativeToPhysicalLocation.getY();
 		updateRadar();
     }
@@ -312,12 +312,12 @@ public class Marker implements Comparable<Marker> {
         Log.w("collisionBox", "ll (x="+x3+" y="+y3+")");
         Log.w("collisionBox", "lr (x="+x4+" y="+y4+")");
         
-        if (collisionBox==null) collisionBox = new PaintableBox(width,height,Color.WHITE,Color.RED);
+        if (collisionBox==null) collisionBox = new com.example.hoyoung.eyeload.PaintableBox(width,height,Color.WHITE,Color.RED);
         else collisionBox.set(width,height);
 
-        float currentAngle = Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1])+90;
+        float currentAngle = com.example.hoyoung.eyeload.Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1])+90;
         
-        if (collisionPosition==null) collisionPosition = new PaintablePosition(collisionBox, x1, y1, currentAngle, 1);
+        if (collisionPosition==null) collisionPosition = new com.example.hoyoung.eyeload.PaintablePosition(collisionBox, x1, y1, currentAngle, 1);
         else collisionPosition.set(collisionBox, x1, y1, currentAngle, 1);
         collisionPosition.paint(canvas);
     }
@@ -337,7 +337,7 @@ public class Marker implements Comparable<Marker> {
         float height = getHeight();
         float adjX = (x1 + x2)/2;
         float adjY = (y1 + y2)/2;
-        float currentAngle = Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1])+90;
+        float currentAngle = com.example.hoyoung.eyeload.Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1])+90;
         adjX -= (width/2);
         adjY -= (gpsSymbol.getHeight()/2);
         
@@ -346,10 +346,10 @@ public class Marker implements Comparable<Marker> {
         Log.w("touchBox", "ll (x="+(adjX)+" y="+(adjY+height)+")");
         Log.w("touchBox", "lr (x="+(adjX+width)+" y="+(adjY+height)+")");
         
-        if (touchBox==null) touchBox = new PaintableBox(width,height,Color.WHITE,Color.GREEN);
+        if (touchBox==null) touchBox = new com.example.hoyoung.eyeload.PaintableBox(width,height,Color.WHITE,Color.GREEN);
         else touchBox.set(width,height);
 
-        if (touchPosition==null) touchPosition = new PaintablePosition(touchBox, adjX, adjY, currentAngle, 1);
+        if (touchPosition==null) touchPosition = new com.example.hoyoung.eyeload.PaintablePosition(touchBox, adjX, adjY, currentAngle, 1);
         else touchPosition.set(touchBox, adjX, adjY, currentAngle, 1);
         touchPosition.paint(canvas);
     }
@@ -358,15 +358,15 @@ public class Marker implements Comparable<Marker> {
     	if (canvas==null||bitmap==null) throw new NullPointerException();
 
         //if (gpsSymbol==null) gpsSymbol = new PaintableGps(36, 36, true, getColor());
-        if (gpsSymbol==null) gpsSymbol = new PaintableIcon(bitmap,96,96);
+        if (gpsSymbol==null) gpsSymbol = new com.example.hoyoung.eyeload.PaintableIcon(bitmap,96,96);
 
         textXyzRelativeToCameraView.get(textArray);
         symbolXyzRelativeToCameraView.get(symbolArray);
 
-        float currentAngle = Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1]);
+        float currentAngle = com.example.hoyoung.eyeload.Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1]);
         float angle = currentAngle + 90;
 
-        if (symbolContainer==null) symbolContainer = new PaintablePosition(gpsSymbol, symbolArray[0], symbolArray[1], angle, 1);
+        if (symbolContainer==null) symbolContainer = new com.example.hoyoung.eyeload.PaintablePosition(gpsSymbol, symbolArray[0], symbolArray[1], angle, 1);
         else symbolContainer.set(gpsSymbol, symbolArray[0], symbolArray[1], angle, 1);
 
         symbolContainer.paint(canvas);
@@ -387,16 +387,16 @@ public class Marker implements Comparable<Marker> {
 	    symbolXyzRelativeToCameraView.get(symbolArray);
 
 	    float maxHeight = Math.round(canvas.getHeight() / 10f) + 1;
-	    if (textBox==null) textBox = new PaintableBoxedText(textStr, Math.round(maxHeight / 2f) + 1, 300);
+	    if (textBox==null) textBox = new com.example.hoyoung.eyeload.PaintableBoxedText(textStr, Math.round(maxHeight / 2f) + 1, 300);
 	    else textBox.set(textStr, Math.round(maxHeight / 2f) + 1, 300);
 
-	    float currentAngle = Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1]);
+	    float currentAngle = com.example.hoyoung.eyeload.Utilities.getAngle(symbolArray[0], symbolArray[1], textArray[0], textArray[1]);
         float angle = currentAngle + 90;
 
 	    float x = textArray[0] - (textBox.getWidth() / 2);
 	    float y = textArray[1] + maxHeight;
 
-	    if (textContainer==null) textContainer = new PaintablePosition(textBox, x, y, angle, 1);
+	    if (textContainer==null) textContainer = new com.example.hoyoung.eyeload.PaintablePosition(textBox, x, y, angle, 1);
 	    else textContainer.set(textBox, x, y, angle, 1);
 	    textContainer.paint(canvas);
 	}

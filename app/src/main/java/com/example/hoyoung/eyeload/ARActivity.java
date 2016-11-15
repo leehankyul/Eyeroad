@@ -9,14 +9,14 @@ import android.hardware.SensorEvent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.PowerManager;
-
-
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.view.View.OnTouchListener;
+
+import com.example.hoyoung.testproject.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,9 +37,9 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     private static final int END_TEXT_COLOR = Color.WHITE;
 
     private static PowerManager.WakeLock wakeLock=null;
-    private static CameraSurface camScreen=null;
+    private static com.example.hoyoung.eyeload.CameraSurface camScreen=null;
     private static TextView endLabel=null;
-    private static ARView arView=null;
+    private static com.example.hoyoung.eyeload.ARView arView=null;
 
     private static Bitmap bitmap=null;
 
@@ -72,10 +72,10 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
 
         super.onCreate(savedInstanceState);
 
-        camScreen = new CameraSurface(this);
+        camScreen = new com.example.hoyoung.eyeload.CameraSurface(this);
         setContentView(camScreen);
 
-        arView=new ARView(this);
+        arView=new com.example.hoyoung.eyeload.ARView(this);
         arView.setOnTouchListener(this);
 
         ViewGroup.LayoutParams arLayout=new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -95,7 +95,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     @Override
     public void onStart(){
         super.onStart();
-        Location last = ARData.getCurrentLocation();
+        Location last = com.example.hoyoung.eyeload.ARData.getCurrentLocation();
         updateData(last.getLatitude(),last.getLongitude(),last.getAltitude());
     }
     @Override
@@ -144,16 +144,16 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     }
     private void updateDataOnZoom(){
         float zoomLevel=calcZoomLevel();
-        ARData.setRadius(zoomLevel);
-        ARData.setZoomLevel(FORMAT.format(zoomLevel));
-        ARData.setZoomProgress(3);
-        Location last = ARData.getCurrentLocation();
+        com.example.hoyoung.eyeload.ARData.setRadius(zoomLevel);
+        com.example.hoyoung.eyeload.ARData.setZoomLevel(FORMAT.format(zoomLevel));
+        com.example.hoyoung.eyeload.ARData.setZoomProgress(3);
+        Location last = com.example.hoyoung.eyeload.ARData.getCurrentLocation();
         updateData(last.getLatitude(),last.getLongitude(),last.getAltitude());
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent me) {
-        for (Marker marker : ARData.getMarkers()) {
+        for (com.example.hoyoung.eyeload.Marker marker : com.example.hoyoung.eyeload.ARData.getMarkers()) {
             if (marker.handleClick(me.getX(), me.getY())) {
                 if (me.getAction() == MotionEvent.ACTION_UP) markerTouched(marker);
                 return true;
@@ -168,7 +168,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
         updateData(location.getLatitude(),location.getLongitude(),location.getAltitude());
     }
 
-    private void markerTouched(Marker marker){
+    private void markerTouched(com.example.hoyoung.eyeload.Marker marker){
         //마커 터치 되었을때 동작.
     }
 
@@ -193,13 +193,13 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
     private static boolean download( double lat, double lon, double alt){
         //DB에서 다운하는 부분
         //Bitmap a= BitmapFactory.decodeResource(this.getResources(), );
-        List<Marker> markers =new ArrayList<Marker>();
-        Marker d=new Marker("Lab",37.5583037 ,126.9984677,90, Color.RED, bitmap );
+        List<com.example.hoyoung.eyeload.Marker> markers =new ArrayList<com.example.hoyoung.eyeload.Marker>();
+        com.example.hoyoung.eyeload.Marker d=new com.example.hoyoung.eyeload.Marker("Lab",37.5583037 ,126.9984677,90, Color.RED, bitmap );
         markers.add(d);
-        Marker c=new Marker("Testing",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
+        com.example.hoyoung.eyeload.Marker c=new com.example.hoyoung.eyeload.Marker("Testing",37.4433899,127.1340677,70, Color.YELLOW,bitmap);
         markers.add(c);
 
-        ARData.addMarkers(markers);
+        com.example.hoyoung.eyeload.ARData.addMarkers(markers);
         return true;
     }
 

@@ -1,5 +1,8 @@
 package com.example.hoyoung.eyeload;
 
+import android.location.Location;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,13 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.location.Location;
-import android.util.Log;
-
 public abstract class ARData {
     private static final String TAG = "ARData";
-	private static final Map<String,Marker> markerList = new ConcurrentHashMap<String,Marker>();
-    private static final List<Marker> cache = new CopyOnWriteArrayList<Marker>();
+	private static final Map<String, com.example.hoyoung.eyeload.Marker> markerList = new ConcurrentHashMap<String, com.example.hoyoung.eyeload.Marker>();
+    private static final List<com.example.hoyoung.eyeload.Marker> cache = new CopyOnWriteArrayList<com.example.hoyoung.eyeload.Marker>();
     private static final AtomicBoolean dirty = new AtomicBoolean(false);
     private static final float[] locationArray = new float[3];
     
@@ -101,17 +101,17 @@ public abstract class ARData {
         }
     }
     
-    public static List<Marker> getMarkers() {
+    public static List<com.example.hoyoung.eyeload.Marker> getMarkers() {
         if (dirty.compareAndSet(true, false)) {
             Log.v(TAG, "DIRTY flag found, resetting all marker heights to zero.");
-            for(Marker ma : markerList.values()) {
+            for(com.example.hoyoung.eyeload.Marker ma : markerList.values()) {
                 ma.getLocation().get(locationArray);
                 locationArray[1]=ma.getInitialY();
                 ma.getLocation().set(locationArray);
             }
 
             Log.v(TAG, "Populating the cache.");
-            List<Marker> copy = new ArrayList<Marker>();
+            List<com.example.hoyoung.eyeload.Marker> copy = new ArrayList<com.example.hoyoung.eyeload.Marker>();
             copy.addAll(markerList.values());
             Collections.sort(copy,comparator);
             cache.clear();
@@ -156,19 +156,19 @@ public abstract class ARData {
         }
     }
     
-    private static final Comparator<Marker> comparator = new Comparator<Marker>() {
-        public int compare(Marker arg0, Marker arg1) {
+    private static final Comparator<com.example.hoyoung.eyeload.Marker> comparator = new Comparator<com.example.hoyoung.eyeload.Marker>() {
+        public int compare(com.example.hoyoung.eyeload.Marker arg0, com.example.hoyoung.testproject.Marker arg1) {
             return Double.compare(arg0.getDistance(),arg1.getDistance());
         }
     };
 
-    public static void addMarkers(Collection<Marker> markers) {
+    public static void addMarkers(Collection<com.example.hoyoung.eyeload.Marker> markers) {
     	if (markers==null) throw new NullPointerException();
 
     	if (markers.size()<=0) return;
     	
     	Log.d(TAG, "New markers, updating markers. new markers="+markers.toString());
-    	for(Marker marker : markers) {
+    	for(com.example.hoyoung.eyeload.Marker marker : markers) {
     	    if (!markerList.containsKey(marker.getName())) {
     	        marker.calcRelativePosition(ARData.getCurrentLocation());
     	        markerList.put(marker.getName(),marker);
@@ -183,7 +183,7 @@ public abstract class ARData {
     
     private static void onLocationChanged(Location location) {
         Log.d(TAG, "New location, updating markers. location="+location.toString());
-        for(Marker ma: markerList.values()) {
+        for(com.example.hoyoung.eyeload.Marker ma: markerList.values()) {
             ma.calcRelativePosition(location);
         }
 
