@@ -1,47 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
     <TextView
         android:id="@+id/mainTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="184dp"
+        android:layout_height="80dp"
         android:text="눈길"
-        android:textSize="40sp"
+        android:textSize="60sp"
         android:gravity="center_horizontal"
         />
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="길안내"
-        android:textSize="24sp"
-        android:layout_weight="2"
-        />
+
     <Button
         android:id="@+id/memoManagementButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:text="메모 관리"
         android:textSize="24sp"
-        android:layout_weight="2"
+        android:background="@drawable/ic_memo"
+        android:layout_x="68dp"
+        android:layout_y="297dp"
         />
+
     <Button
         android:id="@+id/arViewButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:text="증강뷰"
         android:textSize="24sp"
-        android:layout_weight="2"
-        />
+        android:background="@drawable/ic_arview"
+        android:layout_x="224dp"
+        android:layout_y="141dp" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:text="길안내"
+        android:textSize="24sp"
+        android:background="@drawable/ic_search"
+        android:layout_x="221dp"
+        android:layout_y="304dp" />
+
     <Button
         android:id="@+id/meetingButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:text="모임"
         android:textSize="24sp"
-        android:layout_weight="2"
-        />
-</LinearLayout>
+        android:background="@drawable/ic_meeting"
+        android:layout_x="74dp"
+        android:layout_y="158dp" />
+</AbsoluteLayout>
