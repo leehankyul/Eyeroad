@@ -43,6 +43,7 @@ public class MemoManagementActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Toast.makeText(MemoManagementActivity.this, control.getMemoList().get(position).getTitle()+" is clicked.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MemoManagementActivity.this,MemoInfoActivity.class);
                 intent.putExtra("memoKey",String.valueOf(control.getMemoList().get(position).getKey()));

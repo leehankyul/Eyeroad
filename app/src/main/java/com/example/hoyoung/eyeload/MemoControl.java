@@ -26,7 +26,9 @@ import java.util.Map;
 public class MemoControl extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList 및 서버로부터 받은 DTO list
     private ArrayList<MemoDTO> memoList = new ArrayList<>();
+    private MemoDTO memoDTOSelected = new MemoDTO();
     private MemoDAO memoDAO = new MemoDAO();
+
 
     private static MemoControl memoControl = new MemoControl();
     //싱글톤을 위한 생성자
@@ -87,6 +89,12 @@ public class MemoControl extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return memoList.get(position) ;
+    }
+
+    public void getMemo(int key)
+    {
+        memoDTOSelected = memoDAO.select(key);
+        //Log.d("TEST","MemoControl getMemo " + memoDTOSelected.getTitle());
     }
 
     //DB에서 DTO를 가져오는 함수

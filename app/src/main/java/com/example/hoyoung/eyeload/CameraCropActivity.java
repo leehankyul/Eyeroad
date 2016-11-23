@@ -1,4 +1,4 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,17 +10,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
 
 /**
- * Created by ATIV_NINE on 2016-11-04.
+ * Created by ATIV_NINE on 2016-11-16.
  */
 
-public class CameraCropActivity extends Activity implements OnClickListener
+public class CameraCropActivity extends Activity implements View.OnClickListener
 {
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
@@ -35,7 +34,7 @@ public class CameraCropActivity extends Activity implements OnClickListener
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.imageupload);
+        setContentView(R.layout.image_upload);
 
         mButton = (Button) findViewById(R.id.button);
         mPhotoImageView = (ImageView) findViewById(R.id.image);
