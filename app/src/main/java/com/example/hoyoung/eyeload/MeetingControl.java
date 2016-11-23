@@ -27,7 +27,7 @@ import java.util.Map;
 public class MeetingControl extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList 및 서버로부터 불러온 DTO list
     private ArrayList<MeetingDTO> meetingList = new ArrayList<>();
-
+    private MeetingDTO meetingDTOSelected = new MeetingDTO();
     //private MeetingDAO meetingDAO = MeetingDAO.getInstance();//싱글톤 DAO불러오기
     private MeetingDAO meetingDAO = new MeetingDAO();
 
@@ -91,6 +91,16 @@ public class MeetingControl extends BaseAdapter {
         return meetingList.get(position) ;
     }
 
+    public void getMeeting(int key)
+    {
+        meetingDTOSelected = meetingDAO.select(key);
+        Log.d("TESTING","MeetingControl getMeeting " + meetingDTOSelected.getTitle());
+    }
+
+    public MeetingDTO getMeetingTest()
+    {
+        return meetingDTOSelected;
+    }
     //DB에서 DTO를 가져오는 함수
     public void getAllMeeting()
     {

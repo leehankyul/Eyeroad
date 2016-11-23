@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                 startActivity(new Intent(this, MemoManagementActivity.class));
                 break;
             case R.id.arViewButton:
-                startActivity(new Intent(this, ArViewActivity.class));
+                startActivity(new Intent(this, MakingMemoAcitivity.class));
                 break;
             case R.id.meetingButton:
                 startActivity(new Intent(this, MeetingListActivity.class));

@@ -1,26 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="제목" />
+            <EditText android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
-    <EditText android:id="@+id/inputMemo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Input"/>
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내용" />
+            <EditText android:id="@+id/body" android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scrollbars="vertical" />
+        </LinearLayout>
 
-    <Button android:id="@+id/buttonMakingMemo"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textSize="20dp"
-        android:text="Insert"
-        android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/imageupload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미지"/>
 
-    <TextView android:textSize="20dp"
-        android:id="@+id/outputMemo"
-        android:textStyle="bold"
-        android:text="Output"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/imageresult"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="50dp"
+            android:background="#eee"
+            />
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+            <TextView
+                android:text="아이콘 선택"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icon_select" />
+            <ImageButton
+                android:id="@+id/icon1"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_action_name"
+                android:layout_width="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon_select"
+                />
+            <ImageButton
+                android:id="@+id/icon2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic2_action_name"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon1" />
+            <ImageButton
+                android:id="@+id/icon3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic3_action_name"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon2"
+                />
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:text="선택된 아이콘:"
+                android:id="@+id/selected_icon"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/icon3"
+                />
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/selected_icon"
+                android:id="@+id/selected_icon_img"
+                />
+
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+            <CheckedTextView
+                android:text="공개"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:id="@+id/public_or_private"
+                android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                android:clickable="true"
+                android:gravity="center"
+                android:hint="Checked"
+                />
+
+        </LinearLayout>
+        <Button android:id="@+id/save"
+            android:text="저장"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

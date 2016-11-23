@@ -34,19 +34,25 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
         TextView textView=(TextView)findViewById(R.id.memoInfoTextView);
         key = Integer.valueOf(memoKey);
         textView.setText(memoKey);
+        control.getMemo(key);
     }
 
     public void onClick(View v) { // 메뉴의 버튼 선택 시 activity 이동
         switch (v.getId()) {
             case R.id.memoInfoDelete:
-                Toast.makeText(MemoInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
-                control.deleteInfo(key);
+                deleteMemo();
         }
     }
 
-    private void showMemoInfo()
+    public void showMemoInfo()
     {
         //Control의 DTO를 가져와 Activity에 반환하거나 xml에 표시해줘야함
     }
+    public void deleteMemo()
+    {
+        Toast.makeText(MemoInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
+        control.deleteInfo(key);
+    }
+
 
 }

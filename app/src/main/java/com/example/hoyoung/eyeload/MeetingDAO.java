@@ -1,6 +1,7 @@
 package kr.soen.mypart;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +23,14 @@ import java.util.ArrayList;
 public class MeetingDAO extends DAO{
     //싱글톤 클래스
     //private static MeetingDAO meetingDAO = new MeetingDAO();
-
     private ArrayList<MeetingDTO> arrayListMeetingDTO = new ArrayList<>();
+    private MeetingDTO meetingDTOSelected = new MeetingDTO();
+
+    public MeetingDTO getMeetingDTOSelected()
+    {
+        return meetingDTOSelected;
+    }
+
 
     public boolean insert(MeetingDTO dto)
     {
@@ -99,7 +106,6 @@ public class MeetingDAO extends DAO{
         return true;
     }
 
-
     public void deleteInfo(int key){
         String meetingKey = String.valueOf(key);
         class DeleteInfo extends AsyncTask<String, Void, String>{
@@ -159,26 +165,176 @@ public class MeetingDAO extends DAO{
         task.execute(meetingKey);
     }
 
-
-    /*private MeetingDAO()
-    {
-
-    }
-
-    public static MeetingDAO getInstance(){
-        return meetingDAO;
-    }*/
-
     public MeetingDTO select(int key)
     {
-        MeetingDTO dto = new MeetingDTO();
-        return dto;
+        class SelectData extends AsyncTask<String, Void, String>{
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //loading = ProgressDialog.show(MakingMeetingActivity.this, "Please Wait", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+
+                try{
+                    JSONObject jsonObj = new JSONObject(s);
+                    JSONArray jsonArrayMeetingDTO = null;
+                    jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
+
+                    for(int i=0;i<jsonArrayMeetingDTO.length();i++) {
+
+                        //MeetingDTO 객체를 생성
+                        MeetingDTO meetingDTO = new MeetingDTO();
+
+                        JSONObject c = jsonArrayMeetingDTO.getJSONObject(i);
+                        //MeetingDTO 객체에 정보 삽입
+                        //meetingDTO.setKey(Integer.parseInt(c.getString("meetingKey")));
+                        meetingDTO.setTitle(c.getString("title"));
+                        meetingDTO.setPlaceName(c.getString("placeName"));
+                        meetingDTO.setMeetingInfo(c.getString("meetingInfo"));
+                        meetingDTO.setPublisher(c.getString("publisher"));
+                        meetingDTO.setPassword(c.getString("password"));
+
+                        //MeetingDTO 객체를 ArrayList에 삽입
+                        meetingDTOSelected = meetingDTO;
+
+                        Log.d("TESTING","MeetingDAO onPostExcute end");
+                    }
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                try{
+
+                    //String meetingKey = (String)params[0];
+                    String key = (String)params[0];
+
+
+                    String link="http://210.94.194.201/selectMeeting.php";
+                    //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
+                    //meetingKey는 자동으로 설정됨
+                    String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write( data );
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    // Read Server Response
+                    while((line = reader.readLine()) != null)
+                    {
+                        sb.append(line);
+                        break;
+                    }
+                    Log.d("TESTING","MeetingDAO doInBackground end");
+                    return sb.toString();
+                }
+
+
+                catch(Exception e){
+                    return new String("Exception: " + e.getMessage());
+                }
+
+            }
+
+        }
+        String meetingKey = String.valueOf(key);
+        SelectData task = new SelectData();
+        task.execute(meetingKey);
+
+        Log.d("TESTING","MeetingDAO select end");
+        return meetingDTOSelected;
     }
+
     public ArrayList<MeetingDTO> selectAll()
+    {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result){
+                arrayListMeetingDTO.clear();//업데이트를 위한 초기화부분
+
+                try{
+                    JSONObject jsonObj = new JSONObject(result);
+                    JSONArray jsonArrayMeetingDTO = null;
+                    jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
+
+                    for(int i=0;i<jsonArrayMeetingDTO.length();i++) {
+
+                        //MeetingDTO 객체를 생성
+                        MeetingDTO meetingDTO = new MeetingDTO();
+
+                        JSONObject c = jsonArrayMeetingDTO.getJSONObject(i);
+                        //MeetingDTO 객체에 정보 삽입
+                        meetingDTO.setKey(Integer.parseInt(c.getString("meetingKey")));
+                        meetingDTO.setTitle(c.getString("title"));
+                        meetingDTO.setPlaceName(c.getString("placeName"));
+                        meetingDTO.setMeetingInfo(c.getString("meetingInfo"));
+                        meetingDTO.setPublisher(c.getString("publisher"));
+                        meetingDTO.setPassword(c.getString("password"));
+
+                        //MeetingDTO 객체를 ArrayList에 삽입
+                        arrayListMeetingDTO.add(meetingDTO);
+
+                    }
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute("http://210.94.194.201/selectAllMeeting.php");
+
+        return arrayListMeetingDTO;
+    }
+    /*public ArrayList<MeetingDTO> selectAll()
     {
         getAllData("http://210.94.194.201/selectAllMeeting.php");
         return arrayListMeetingDTO;
     }
+
+
 
     protected void showList(String myJSON) {
 
@@ -248,5 +404,5 @@ public class MeetingDAO extends DAO{
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
 
-    }
+    }*/
 }
