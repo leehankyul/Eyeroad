@@ -1,7 +1,7 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 /**
- * Created by Jin on 2016-11-04.
+ * Created by Jin on 2016-11-5.
  */
 
 public abstract class DTO {

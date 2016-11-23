@@ -1,6 +1,7 @@
 package com.example.hoyoung.eyeload;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,14 +10,14 @@ import android.hardware.SensorEvent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.PowerManager;
-
-
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -69,9 +70,7 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
                 }
             }
         }*/
-
         super.onCreate(savedInstanceState);
-
         camScreen = new CameraSurface(this);
         setContentView(camScreen);
 
@@ -80,16 +79,33 @@ public class ARActivity extends SensorActivity implements OnTouchListener {
 
         ViewGroup.LayoutParams arLayout=new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addContentView(arView,arLayout);
+        LayoutInflater inflator=getLayoutInflater();
+        View over_view=(View)inflator.inflate(R.layout.over,null);
+        addContentView(over_view,arLayout);
 
-
-
+        findViewById(R.id.btnMemo).setOnClickListener(
+                new Button.OnClickListener(){
+                    public  void onClick(View v)
+                    {
+                        Intent intent = new Intent(ARActivity.this, NoteEdit.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+        findViewById(R.id.btnSearch).setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ARActivity.this, SearchActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
 
         updateDataOnZoom();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "DimScreen");
 
         bitmap= BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
-
 
     }
     @Override

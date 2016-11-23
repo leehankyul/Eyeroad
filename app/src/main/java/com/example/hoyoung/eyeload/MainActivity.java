@@ -1,9 +1,13 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+/**
+ * Created by Jin on 2016-10-8.
+ */
 
 public class MainActivity extends AppCompatActivity implements  View.OnClickListener{
 
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                 startActivity(new Intent(this, MemoManagementActivity.class));
                 break;
             case R.id.arViewButton:
-                startActivity(new Intent(this, ArViewActivity.class));
+                startActivity(new Intent(this, MakingMemoAcitivity.class));
                 break;
             case R.id.meetingButton:
                 startActivity(new Intent(this, MeetingListActivity.class));

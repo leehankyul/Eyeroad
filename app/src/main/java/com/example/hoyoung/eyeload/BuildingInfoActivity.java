@@ -1,7 +1,11 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+/**
+ * Created by Jin on 2016-11-5.
+ */
 
 public class BuildingInfoActivity extends AppCompatActivity {
 

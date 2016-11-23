@@ -1,26 +1,53 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MeetingControl extends BaseAdapter {
-    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<MeetingDTO> listViewItemList = new ArrayList<MeetingDTO>() ;
+/**
+ * Created by Jin on 2016-10-8.
+ */
 
-    // ListViewAdapter의 생성자
-    public MeetingControl() {}
+public class MeetingControl extends BaseAdapter {
+    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList 및 서버로부터 불러온 DTO list
+    private ArrayList<MeetingDTO> meetingList = new ArrayList<>();
+    private MeetingDTO meetingDTOSelected = new MeetingDTO();
+    //private MeetingDAO meetingDAO = MeetingDAO.getInstance();//싱글톤 DAO불러오기
+    private MeetingDAO meetingDAO = new MeetingDAO();
+
+    private static MeetingControl meetingControl = new MeetingControl();
+
+    //생성자
+    private MeetingControl()
+    {
+
+    }
+
+    //싱글톤 return
+    public static MeetingControl getInstance(){
+        return meetingControl;
+    }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
     @Override
     public int getCount() {
-        return listViewItemList.size() ;
+        return meetingList.size() ;
     }
 
     // position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴. : 필수 구현
@@ -36,22 +63,21 @@ public class MeetingControl extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        TextView titleTextView = (TextView) convertView.findViewById(R.id.textView1) ;
-        TextView descTextView = (TextView) convertView.findViewById(R.id.textView2) ;
-
-        // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        MeetingDTO listViewItem = listViewItemList.get(position);
+        TextView titleTextView = (TextView) convertView.findViewById(R.id.meetingTextView1) ;
+        TextView placeNameTextView = (TextView) convertView.findViewById(R.id.meetingTextView2) ;
+        // Data Set(meetingList)에서 position에 위치한 데이터 참조 획득
+        MeetingDTO listViewItem = meetingList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
         titleTextView.setText(listViewItem.getTitle());
-        descTextView.setText(listViewItem.getDesc());
+        placeNameTextView.setText(listViewItem.getPlaceName());
 
         return convertView;
     }
 
     public ArrayList<MeetingDTO> getMeetingList()
     {
-        return listViewItemList;
+        return meetingList;
     }
     // 지정한 위치(position)에 있는 데이터와 관계된 아이템(row)의 ID를 리턴. : 필수 구현
     @Override
@@ -62,66 +88,38 @@ public class MeetingControl extends BaseAdapter {
     // 지정한 위치(position)에 있는 데이터 리턴 : 필수 구현
     @Override
     public Object getItem(int position) {
-        return listViewItemList.get(position) ;
+        return meetingList.get(position) ;
     }
 
-    //함수가 호출되는 부분에 구현부분을 DTO의 get,set으로 작성하고 이 함수는 지우면 된다.
-    //아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addMeetingDTO(String title, String desc) {
-        MeetingDTO item = new MeetingDTO();
+    public void getMeeting(int key)
+    {
+        meetingDTOSelected = meetingDAO.select(key);
+        Log.d("TESTING","MeetingControl getMeeting " + meetingDTOSelected.getTitle());
+    }
 
-        item.setTitle(title);
-        item.setDesc(desc);
-
-        listViewItemList.add(item);
+    public MeetingDTO getMeetingTest()
+    {
+        return meetingDTOSelected;
     }
     //DB에서 DTO를 가져오는 함수
-    public boolean getAllMeeting()
+    public void getAllMeeting()
     {
-        boolean flag = false;
-
-        //DB에서 불러온 DTO를 xml에 표시해주는 부분
-        for(int i=0;i<=20;i++)
-        {
-            this.addMeetingDTO("Meeting" + i , "Information" + i) ;
-        }
-
-        //DTO를 이상없이 모두 가져온 경우
-        if(flag==true)
-            return true;
-
-        //DTO를 가져오지 못 한 경우
-        else
-            return false;
+        meetingList = meetingDAO.selectAll();
     }
 
-    public boolean setInfo(Map info)
+    public void setInfo(String title,String placeName,String meetingInfo,String publisher, String password)
     {
-        //DTO에 관한 set 명령어 구현부분이 있어야 함
-        //DTO에 관한 set 명령어는 DAO를 다뤄야 함
-
-        boolean flag= false;
-        //DTO에 관한 set이 성공한 경우
-        if(flag==true)
-            return true;
-
-        //DTO에 관한 set이 실패한 경우
-        else
-            return false;
+        MeetingDTO meetingDTO = new MeetingDTO();
+        meetingDTO.setTitle(title);
+        meetingDTO.setPlaceName(placeName);
+        meetingDTO.setMeetingInfo(meetingInfo);
+        meetingDTO.setPublisher(publisher);
+        meetingDTO.setPassword(password);
+        meetingDAO.insert(meetingDTO);
     }
 
-    public boolean deleteInfo(int key)
-    {
-        //DTO에 관한 delete 명령어 구현부분이 있어야 함
-        //DTO에 관한 delete 명령어는 DAO를 다뤄야 함
-
-        boolean flag= false;
-        //DTO에 관한 delete가 성공한 경우
-        if(flag==true)
-            return true;
-
-        //DTO에 관한 delete가 실패한 경우
-        else
-            return false;
-    }
+   public void deleteInfo(int key)
+   {
+       meetingDAO.deleteInfo(key);
+   }
 }

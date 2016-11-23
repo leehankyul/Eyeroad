@@ -1,4 +1,8 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
+
+/**
+ * Created by Jin on 2016-10-8.
+ */
 
 public class BuildingControl {
     //DAO선언

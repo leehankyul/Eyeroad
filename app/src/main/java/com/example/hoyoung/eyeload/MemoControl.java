@@ -1,26 +1,51 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MemoControl extends BaseAdapter {
-    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<MemoDTO> listViewItemList = new ArrayList<MemoDTO>() ;
+/**
+ * Created by Jin on 2016-10-8.
+ */
 
-    // ListViewAdapter의 생성자
-    public MemoControl() {}
+public class MemoControl extends BaseAdapter {
+    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList 및 서버로부터 받은 DTO list
+    private ArrayList<MemoDTO> memoList = new ArrayList<>();
+    private MemoDTO memoDTOSelected = new MemoDTO();
+    private MemoDAO memoDAO = new MemoDAO();
+
+
+    private static MemoControl memoControl = new MemoControl();
+    //싱글톤을 위한 생성자
+    private MemoControl()
+    {
+
+    }
+
+    //싱글톤 return
+    public static MemoControl getInstance(){
+        return memoControl;
+    }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
     @Override
     public int getCount() {
-        return listViewItemList.size() ;
+        return memoList.size() ;
     }
 
     // position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴. : 필수 구현
@@ -36,22 +61,22 @@ public class MemoControl extends BaseAdapter {
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        TextView titleTextView = (TextView) convertView.findViewById(R.id.textView1) ;
-        TextView descTextView = (TextView) convertView.findViewById(R.id.textView2) ;
+        TextView titleTextView = (TextView) convertView.findViewById(R.id.memoTextView1) ;
+        TextView contentTextView = (TextView) convertView.findViewById(R.id.memoTextView2) ;
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        MemoDTO listViewItem = listViewItemList.get(position);
+        MemoDTO listViewItem = memoList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
         titleTextView.setText(listViewItem.getTitle());
-        descTextView.setText(listViewItem.getDesc());
+        contentTextView.setText(listViewItem.getContent());
 
         return convertView;
     }
 
     public ArrayList<MemoDTO> getMemoList()
     {
-        return listViewItemList;
+        return memoList;
     }
 
     // 지정한 위치(position)에 있는 데이터와 관계된 아이템(row)의 ID를 리턴. : 필수 구현
@@ -63,68 +88,43 @@ public class MemoControl extends BaseAdapter {
     // 지정한 위치(position)에 있는 데이터 리턴 : 필수 구현
     @Override
     public Object getItem(int position) {
-        return listViewItemList.get(position) ;
+        return memoList.get(position) ;
     }
 
-    //함수가 호출되는 부분에 구현부분을 DTO의 get,set으로 작성하고 이 함수는 지우면 된다.
-    //아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addMemoDTO(String title, String desc) {
-        MemoDTO item = new MemoDTO();
-
-        item.setTitle(title);
-        item.setDesc(desc);
-
-        listViewItemList.add(item);
+    public void getMemo(int key)
+    {
+        memoDTOSelected = memoDAO.select(key);
+        //Log.d("TEST","MemoControl getMemo " + memoDTOSelected.getTitle());
     }
 
     //DB에서 DTO를 가져오는 함수
-    public boolean getAllMemo()
+    public void getAllMemo()
     {
-        boolean flag = false;
 
-        //DB에서 불러온 DTO를 xml에 표시해주는 부분
-        for(int i=1;i<=10;i++)
-        {
-            this.addMemoDTO("Memo" + i , "Information" + i) ;
-        }
-
-        //DTO를 이상없이 모두 가져온 경우
-        if(flag==true)
-            return true;
-
-            //DTO를 가져오지 못 한 경우
-        else
-            return false;
+        memoList = memoDAO.selectAll();
+        //Log.d("print","memoControl's memoList size : "+ String.valueOf(memoList.size()) );
     }
 
-    public boolean setInfo(Map info)
+    public void setInfo(String title,Double x,Double y,Double z,String content, String date,String image,int iconId,String deviceID,int visibility)
     {
-        //DTO에 관한 set 명령어 구현부분이 있어야 함
-        //DTO에 관한 set 명령어는 DAO를 다뤄야 함
-
-        boolean flag= false;
-        //DTO에 관한 set이 성공한 경우
-        if(flag==true)
-            return true;
-
-            //DTO에 관한 set이 실패한 경우
-        else
-            return false;
+        MemoDTO memoDTO = new MemoDTO();
+        //memoDTO.setKey(memoKey);
+        memoDTO.setTitle(title);
+        memoDTO.setX(x);
+        memoDTO.setY(y);
+        memoDTO.setZ(z);
+        memoDTO.setContent(content);
+        memoDTO.setDate(date);
+        memoDTO.setImage(image);
+        memoDTO.setIconId(iconId);
+        memoDTO.setDeviceID(deviceID);
+        memoDTO.setVisibility(visibility);
+        memoDAO.insert(memoDTO);
+    }
+    public void deleteInfo(int key)
+    {
+        memoDAO.delete(key);
     }
 
-    public boolean deleteInfo(int key)
-    {
-        //DTO에 관한 delete 명령어 구현부분이 있어야 함
-        //DTO에 관한 delete 명령어는 DAO를 다뤄야 함
-
-        boolean flag= false;
-        //DTO에 관한 delete가 성공한 경우
-        if(flag==true)
-            return true;
-
-            //DTO에 관한 delete가 실패한 경우
-        else
-            return false;
-    }
 
 }

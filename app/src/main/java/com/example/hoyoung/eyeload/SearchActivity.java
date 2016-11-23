@@ -1,9 +1,13 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+/**
+ * Created by Jin on 2016-10-8.
+ */
 
 public class SearchActivity extends AppCompatActivity implements  View.OnClickListener{
 

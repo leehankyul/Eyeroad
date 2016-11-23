@@ -1,29 +1,58 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MemoInfoActivity extends AppCompatActivity {
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
+/**
+ * Created by Jin on 2016-11-5.
+ */
+
+public class MemoInfoActivity extends AppCompatActivity implements View.OnClickListener{
+    private int key;
+    MemoControl control = MemoControl.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_info);
+        findViewById(R.id.memoInfoDelete).setOnClickListener(this);
 
         Intent intent = new Intent(this.getIntent());
-        String title = intent.getStringExtra("title");
+        String memoKey = intent.getStringExtra("memoKey");
         TextView textView=(TextView)findViewById(R.id.memoInfoTextView);
-        textView.setText(title);
+        key = Integer.valueOf(memoKey);
+        textView.setText(memoKey);
+        control.getMemo(key);
     }
 
-    private void showMemoInfo()
+    public void onClick(View v) { // 메뉴의 버튼 선택 시 activity 이동
+        switch (v.getId()) {
+            case R.id.memoInfoDelete:
+                deleteMemo();
+        }
+    }
+
+    public void showMemoInfo()
     {
         //Control의 DTO를 가져와 Activity에 반환하거나 xml에 표시해줘야함
     }
-    private void deleteMemo()
+    public void deleteMemo()
     {
-        //Control의 delete()를 이용하여 Memo를 삭제함
+        Toast.makeText(MemoInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
+        control.deleteInfo(key);
     }
+
+
 }

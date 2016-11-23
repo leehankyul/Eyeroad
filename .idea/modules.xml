@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Eyeroad.iml" filepath="$PROJECT_DIR$/Eyeroad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Eyeroad.iml" filepath="$PROJECT_DIR$/.idea/Eyeroad.iml" />
     </modules>
   </component>
 </project>
