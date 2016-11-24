@@ -114,6 +114,11 @@ public class MemoDAO extends DAO{
         String deviceID = dto.getDeviceID();
         String visibility = String.valueOf(dto.getVisibility());
 
+        /*Log.d("TESTING","MemoDAO");
+        Log.d("TESTING","title:" + title);
+        Log.d("TESTING","content:" + content);
+        Log.d("TESTING","iconId:" + iconId);
+        Log.d("TESTING","visibility:" + visibility);*/
         InsertData task = new InsertData();
         //task.execute(meetingKey, title,placeName, meetingInfo, publisher, password);
         task.execute(title,x,y,z,content,date,image,iconId,deviceID,visibility);

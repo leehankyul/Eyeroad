@@ -24,7 +24,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     private ImageView mIcon2;
     private ImageView mIcon3;
     private ImageView selectedIcon;
-    private String mImageString;
+    private String mImageString="null";
     private int mIconID;
     final static int ACT_EDIT = 0;
     private int mSelectedIndexSet;
@@ -98,7 +98,12 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     public void makeMemo()
     {
         Log.d("TEST","MakingMemoActi : " + mImageString);
-        control.setInfo(mTitleText.getText().toString(),(double)1,(double)1,(double)1,mBodyText.getText().toString(),"2010",mImageString,1,"deviceId",1);
+        control.setInfo(mTitleText.getText().toString(),(double)1,(double)1,(double)1,mBodyText.getText().toString(),"2010",mImageString,mIconID,"deviceId",mSelectedIndexSet);
+        /*Log.d("TESTING","MakingMemoActivity");
+        Log.d("TESTING","mTitleText:" + mTitleText.getText().toString());
+        Log.d("TESTING","mBodyTest:" + mBodyText.getText().toString());
+        Log.d("TESTING","mIconID:" + mIconID);
+        Log.d("TESTING","mSelectedIndexSet:" + mSelectedIndexSet);*/
 
     }
 

@@ -20,8 +20,8 @@
 	$deviceID = $_POST['deviceID'];
 	$visibility = $_POST['visibility'];
 
-	#$result = mysqli_query($con,"insert into Memo (memoKey, title, x, y, z, content, date, image, iconId, deviceID, visibility) values ('$memoKey', '$title', '$x', '$y', '$z', '$data','$content', '$image', '$iconId', '$deviceID','$visibility')");	
-	$result = mysqli_query($con,"insert into Memo (title, x, y, z, content, date, image, iconId, deviceID, visibility) values ('$title', '$x', '$y', '$z', '$data','$content', '$image', '$iconId', '$deviceID','$visibility')");
+	#$result = mysqli_query($con,"insert into Memo (memoKey, title, x, y, z, content, date, image, iconId, deviceID, visibility) values ('$memoKey', '$title', '$x', '$y', '$z', '$content','$date', '$image', '$iconId', '$deviceID','$visibility')");	
+	$result = mysqli_query($con,"insert into Memo (title, x, y, z, content, date, image, iconId, deviceID, visibility) values ('$title', '$x', '$y', '$z', '$content','$date', '$image', '$iconId', '$deviceID','$visibility')");
 
 	if($result)
 	{  
