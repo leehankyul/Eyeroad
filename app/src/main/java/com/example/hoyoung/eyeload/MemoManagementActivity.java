@@ -1,9 +1,9 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,14 +23,16 @@ public class MemoManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         control.getAllMemo(); // DB에서 Memo에 관한 모든 정보를 가져옴
         setContentView(R.layout.activity_memo_management);
-        try{ Thread.sleep(20);}catch(Exception e){}
+        try {
+            Thread.sleep(20);
+        } catch (Exception e) {
+        }
         setupListView();
         memoClicked();
     }
 
     //List내용을 xml에 추가하는 부분
-    public void setupListView()
-    {
+    public void setupListView() {
         listView = (ListView) findViewById(R.id.memoManagementListview1);
         listView.setAdapter(control);
 
@@ -44,9 +46,9 @@ public class MemoManagementActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(MemoManagementActivity.this, control.getMemoList().get(position).getTitle()+" is clicked.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MemoManagementActivity.this,MemoInfoActivity.class);
-                intent.putExtra("memoKey",String.valueOf(control.getMemoList().get(position).getKey()));
+                Toast.makeText(MemoManagementActivity.this, control.getMemoList().get(position).getTitle() + " is clicked.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MemoManagementActivity.this, MemoInfoActivity.class);
+                intent.putExtra("memoKey", String.valueOf(control.getMemoList().get(position).getKey()));
                 startActivity(intent);
 
             }

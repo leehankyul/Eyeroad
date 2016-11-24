@@ -1,11 +1,11 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,7 +27,10 @@ public class MeetingListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meeting_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        try{ Thread.sleep(1);}catch(Exception e){}
+        try {
+            Thread.sleep(1);
+        } catch (Exception e) {
+        }
         setupListView();
         meetingClicked();
 
@@ -35,7 +38,7 @@ public class MeetingListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//Activity 안의 버튼이 눌린 경우
-                Intent intent = new Intent(MeetingListActivity.this,MakingMeetingActivity.class);
+                Intent intent = new Intent(MeetingListActivity.this, MakingMeetingActivity.class);
 
                 startActivity(intent);
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -60,8 +63,7 @@ public class MeetingListActivity extends AppCompatActivity {
     }*/
 
     //List내용을 xml에 추가하는 부분
-    public void setupListView()
-    {
+    public void setupListView() {
         //control.getAllMeeting();
 
         listView = (ListView) findViewById(R.id.meetingListview1);
@@ -75,8 +77,8 @@ public class MeetingListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MeetingListActivity.this, control.getMeetingList().get(position).getTitle() + " is clicked.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MeetingListActivity.this,MeetingInfoActivity.class);
-                intent.putExtra("meetingKey",String.valueOf(control.getMeetingList().get(position).getKey()));
+                Intent intent = new Intent(MeetingListActivity.this, MeetingInfoActivity.class);
+                intent.putExtra("meetingKey", String.valueOf(control.getMeetingList().get(position).getKey()));
                 startActivity(intent);
             }
         };

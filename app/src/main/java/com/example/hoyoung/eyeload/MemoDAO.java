@@ -1,7 +1,7 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,24 +11,22 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InterfaceAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.sql.Date;
 import java.util.ArrayList;
 
 /**
  * Created by Jin on 2016-11-17.
  */
 
-public class MemoDAO extends DAO{
+public class MemoDAO extends DAO {
 
     private ArrayList<MemoDTO> arrayListMemoDTO = new ArrayList<>();
     private MemoDTO memoDTOSelected = new MemoDTO();
-    public boolean insert(MemoDTO dto)
-    {
-        class InsertData extends AsyncTask<String, Void, String>{
+
+    public boolean insert(MemoDTO dto) {
+        class InsertData extends AsyncTask<String, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -46,24 +44,24 @@ public class MemoDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
+                try {
 
                     //String memoKey = (String)params[0];
-                    String title = (String)params[0];
-                    String x = (String)params[1];
-                    String y = (String)params[2];
-                    String z = (String)params[3];
-                    String content = (String)params[4];
-                    String date = (String)params[5];
-                    String image = (String)params[6];
-                    String iconId = (String)params[7];
-                    String deviceID = (String)params[8];
-                    String visibility = (String)params[9];
+                    String title = (String) params[0];
+                    String x = (String) params[1];
+                    String y = (String) params[2];
+                    String z = (String) params[3];
+                    String content = (String) params[4];
+                    String date = (String) params[5];
+                    String image = (String) params[6];
+                    String iconId = (String) params[7];
+                    String deviceID = (String) params[8];
+                    String visibility = (String) params[9];
 
-                    String link="http://210.94.194.201/insertMemo.php";
+                    String link = "http://210.94.194.201/insertMemo.php";
                     //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
                     //meetingKey는 자동으로 설정됨
-                    String data  = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(title, "UTF-8");
+                    String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(title, "UTF-8");
                     data += "&" + URLEncoder.encode("x", "UTF-8") + "=" + URLEncoder.encode(x, "UTF-8");
                     data += "&" + URLEncoder.encode("y", "UTF-8") + "=" + URLEncoder.encode(y, "UTF-8");
                     data += "&" + URLEncoder.encode("z", "UTF-8") + "=" + URLEncoder.encode(z, "UTF-8");
@@ -80,7 +78,7 @@ public class MemoDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -89,14 +87,12 @@ public class MemoDAO extends DAO{
                     String line = null;
 
                     // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
                     return sb.toString();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -116,11 +112,12 @@ public class MemoDAO extends DAO{
 
         InsertData task = new InsertData();
         //task.execute(meetingKey, title,placeName, meetingInfo, publisher, password);
-        task.execute(title,x,y,z,content,date,image,iconId,deviceID,visibility);
+        task.execute(title, x, y, z, content, date, image, iconId, deviceID, visibility);
 
         return true;
     }
-    public boolean delete(int key){
+
+    public boolean delete(int key) {
         String memoKey = String.valueOf(key);
         class DeleteInfo extends AsyncTask<String, Void, String> {
             //ProgressDialog loading;
@@ -142,11 +139,11 @@ public class MemoDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
-                    String key = (String)params[0];
+                try {
+                    String key = (String) params[0];
 
-                    String link="http://210.94.194.201/deleteMemo.php";
-                    String data  = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+                    String link = "http://210.94.194.201/deleteMemo.php";
+                    String data = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
@@ -154,7 +151,7 @@ public class MemoDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -162,14 +159,12 @@ public class MemoDAO extends DAO{
                     StringBuilder sb = new StringBuilder();
                     String line = null;
 
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
                     return sb.toString();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -181,9 +176,9 @@ public class MemoDAO extends DAO{
 
         return true;
     }
-    public MemoDTO select(int key)
-    {
-        class SelectData extends AsyncTask<String, Void, String>{
+
+    public MemoDTO select(int key) {
+        class SelectData extends AsyncTask<String, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -194,12 +189,12 @@ public class MemoDAO extends DAO{
             @Override
             protected void onPostExecute(String s) {
 
-                try{
+                try {
                     JSONObject jsonObj = new JSONObject(s);
                     JSONArray jsonArrayMemoDTO = null;
                     jsonArrayMemoDTO = jsonObj.getJSONArray("result");
                     //Log.d("print","meetingListLength : "+ String.valueOf(jsonArrayMeetingDTO.length()) );
-                    for(int i=0;i<jsonArrayMemoDTO.length();i++) {
+                    for (int i = 0; i < jsonArrayMemoDTO.length(); i++) {
                         //MeetingDTO 객체를 생성
                         MemoDTO memoDTO = new MemoDTO();
 
@@ -220,7 +215,7 @@ public class MemoDAO extends DAO{
                         memoDTOSelected = memoDTO;
 
                     }
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -228,16 +223,16 @@ public class MemoDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
+                try {
 
                     //String memoKey = (String)params[0];
-                    String key = (String)params[0];
+                    String key = (String) params[0];
 
 
-                    String link="http://210.94.194.201/selectMemo.php";
+                    String link = "http://210.94.194.201/selectMemo.php";
                     //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
                     //meetingKey는 자동으로 설정됨
-                    String data  = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+                    String data = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 
 
                     URL url = new URL(link);
@@ -246,7 +241,7 @@ public class MemoDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -255,17 +250,13 @@ public class MemoDAO extends DAO{
                     String line = null;
 
                     // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
 
                     return sb.toString();
-                }
-
-
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -280,8 +271,7 @@ public class MemoDAO extends DAO{
         return memoDTOSelected;
     }
 
-    public ArrayList<MemoDTO> selectAll()
-    {
+    public ArrayList<MemoDTO> selectAll() {
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
@@ -298,27 +288,27 @@ public class MemoDAO extends DAO{
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
                     String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
                     }
 
                     return sb.toString().trim();
 
-                }catch(Exception e){
+                } catch (Exception e) {
                     return null;
                 }
             }
 
             @Override
-            protected void onPostExecute(String result){
+            protected void onPostExecute(String result) {
                 arrayListMemoDTO.clear();//업데이트를 위한 초기화부분
 
-                try{
+                try {
                     JSONObject jsonObj = new JSONObject(result);
                     JSONArray jsonArrayMemoDTO = null;
                     jsonArrayMemoDTO = jsonObj.getJSONArray("result");
 
-                    for(int i=0;i<jsonArrayMemoDTO.length();i++) {
+                    for (int i = 0; i < jsonArrayMemoDTO.length(); i++) {
 
                         //MeetingDTO 객체를 생성
                         MemoDTO memoDTO = new MemoDTO();
@@ -339,7 +329,7 @@ public class MemoDAO extends DAO{
                         arrayListMemoDTO.add(memoDTO);
                     }
 
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }

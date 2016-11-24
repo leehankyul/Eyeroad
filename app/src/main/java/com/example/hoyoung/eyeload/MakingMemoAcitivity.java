@@ -1,4 +1,5 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     private int mIconID;
     final static int ACT_EDIT = 0;
     private int mSelectedIndexSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedIcon.setImageResource(R.drawable.ic_action_name);
-                mIconID=1;
+                mIconID = 1;
             }
         });
         mIcon2 = (ImageView) findViewById(R.id.icon2);
@@ -59,7 +61,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedIcon.setImageResource(R.drawable.ic2_action_name);
-                mIconID=2;
+                mIconID = 2;
             }
         });
         mIcon3 = (ImageView) findViewById(R.id.icon3);
@@ -67,7 +69,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedIcon.setImageResource(R.drawable.ic3_action_name);
-                mIconID=3;
+                mIconID = 3;
             }
         });
         final CheckedTextView ctv = (CheckedTextView) findViewById(R.id.public_or_private);
@@ -76,11 +78,10 @@ public class MakingMemoAcitivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (ctv.isChecked()) {
                     ctv.setChecked(false);
-                    mSelectedIndexSet=1;
-                }
-                else {
+                    mSelectedIndexSet = 1;
+                } else {
                     ctv.setChecked(true);
-                    mSelectedIndexSet=0;
+                    mSelectedIndexSet = 0;
                 }
             }
         });
@@ -95,24 +96,25 @@ public class MakingMemoAcitivity extends AppCompatActivity {
         });
 
     }
-    public void makeMemo()
-    {
-        Log.d("TEST","MakingMemoActi : " + mImageString);
-        control.setInfo(mTitleText.getText().toString(),(double)1,(double)1,(double)1,mBodyText.getText().toString(),"2010",mImageString,1,"deviceId",1);
+
+    public void makeMemo() {
+        Log.d("TEST", "MakingMemoActi : " + mImageString);
+        control.setInfo(mTitleText.getText().toString(), (double) 1, (double) 1, (double) 1, mBodyText.getText().toString(), "2010", mImageString, 1, "deviceId", 1);
 
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ACT_EDIT:
-                if(resultCode == RESULT_OK) {
-                    mImage.setImageBitmap((Bitmap)data.getParcelableExtra("image"));
-                    mImageString=bitmapToByteArray((Bitmap)data.getParcelableExtra("image"));
+                if (resultCode == RESULT_OK) {
+                    mImage.setImageBitmap((Bitmap) data.getParcelableExtra("image"));
+                    mImageString = bitmapToByteArray((Bitmap) data.getParcelableExtra("image"));
                 }
                 break;
         }
     }
-    public String bitmapToByteArray(Bitmap bitmap){//가져온 이미지를 바이트 배열로 변환하고 문자열로 변환
+
+    public String bitmapToByteArray(Bitmap bitmap) {//가져온 이미지를 바이트 배열로 변환하고 문자열로 변환
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();

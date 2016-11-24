@@ -1,25 +1,17 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Created by Jin on 2016-11-5.
  */
 
-public class MemoInfoActivity extends AppCompatActivity implements View.OnClickListener{
+public class MemoInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private int key;
     MemoControl control = MemoControl.getInstance();
 
@@ -31,7 +23,7 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = new Intent(this.getIntent());
         String memoKey = intent.getStringExtra("memoKey");
-        TextView textView=(TextView)findViewById(R.id.memoInfoTextView);
+        TextView textView = (TextView) findViewById(R.id.memoInfoTextView);
         key = Integer.valueOf(memoKey);
         textView.setText(memoKey);
         control.getMemo(key);
@@ -44,12 +36,11 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void showMemoInfo()
-    {
+    public void showMemoInfo() {
         //Control의 DTO를 가져와 Activity에 반환하거나 xml에 표시해줘야함
     }
-    public void deleteMemo()
-    {
+
+    public void deleteMemo() {
         Toast.makeText(MemoInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
         control.deleteInfo(key);
     }

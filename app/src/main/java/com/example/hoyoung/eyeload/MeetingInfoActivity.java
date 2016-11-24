@@ -1,20 +1,13 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Created by Jin on 2016-11-5.
@@ -25,11 +18,11 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
     private int key;
     MeetingControl control = MeetingControl.getInstance();
 
-    public MeetingInfoActivity()
-    {
+    public MeetingInfoActivity() {
 
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +30,17 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
         String meetingKey = intent.getStringExtra("meetingKey");
         key = Integer.valueOf(meetingKey);
         control.getMeeting(key);
-        String ti= control.getMeetingTest().getTitle();
+        String ti = control.getMeetingTest().getTitle();
 
         setContentView(R.layout.activity_meeting_info);
         findViewById(R.id.meetingInfoDelete).setOnClickListener(this);
-        TextView textView=(TextView)findViewById(R.id.meetingInfoTextView);
+        TextView textView = (TextView) findViewById(R.id.meetingInfoTextView);
 
-        try{ Thread.sleep(2);}catch(Exception e){}
-        Log.d("TESTING","MeetingInfoActivity getMeeting before");
+        try {
+            Thread.sleep(2);
+        } catch (Exception e) {
+        }
+        Log.d("TESTING", "MeetingInfoActivity getMeeting before");
         textView.setText(ti);
 
     }
@@ -56,12 +52,11 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public void navigateMeeting()
-    {
+    public void navigateMeeting() {
         //showMapActivity를 호출하여 길을 안내하면 됨
     }
-    public void deleteMeeting()
-    {
+
+    public void deleteMeeting() {
         Toast.makeText(MeetingInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
         control.deleteInfo(key);
     }

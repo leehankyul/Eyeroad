@@ -1,4 +1,5 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,21 +21,19 @@ import java.util.ArrayList;
  * Created by Jin on 2016-11-17.
  */
 
-public class MeetingDAO extends DAO{
+public class MeetingDAO extends DAO {
     //싱글톤 클래스
     //private static MeetingDAO meetingDAO = new MeetingDAO();
     private ArrayList<MeetingDTO> arrayListMeetingDTO = new ArrayList<>();
     private MeetingDTO meetingDTOSelected = new MeetingDTO();
 
-    public MeetingDTO getMeetingDTOSelected()
-    {
+    public MeetingDTO getMeetingDTOSelected() {
         return meetingDTOSelected;
     }
 
 
-    public boolean insert(MeetingDTO dto)
-    {
-        class InsertData extends AsyncTask<String, Void, String>{
+    public boolean insert(MeetingDTO dto) {
+        class InsertData extends AsyncTask<String, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -52,19 +51,19 @@ public class MeetingDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
+                try {
 
                     //String meetingKey = (String)params[0];
-                    String title = (String)params[0];
-                    String placeName = (String)params[1];
-                    String meetingInfo = (String)params[2];
-                    String publisher = (String)params[3];
-                    String password = (String)params[4];
+                    String title = (String) params[0];
+                    String placeName = (String) params[1];
+                    String meetingInfo = (String) params[2];
+                    String publisher = (String) params[3];
+                    String password = (String) params[4];
 
-                    String link="http://210.94.194.201/insertMeeting.php";
+                    String link = "http://210.94.194.201/insertMeeting.php";
                     //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
                     //meetingKey는 자동으로 설정됨
-                    String data  = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(title, "UTF-8");
+                    String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(title, "UTF-8");
                     data += "&" + URLEncoder.encode("placeName", "UTF-8") + "=" + URLEncoder.encode(placeName, "UTF-8");
                     data += "&" + URLEncoder.encode("meetingInfo", "UTF-8") + "=" + URLEncoder.encode(meetingInfo, "UTF-8");
                     data += "&" + URLEncoder.encode("publisher", "UTF-8") + "=" + URLEncoder.encode(publisher, "UTF-8");
@@ -76,7 +75,7 @@ public class MeetingDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -85,14 +84,12 @@ public class MeetingDAO extends DAO{
                     String line = null;
 
                     // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
                     return sb.toString();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -101,14 +98,14 @@ public class MeetingDAO extends DAO{
 
         InsertData task = new InsertData();
         //task.execute(meetingKey, title,placeName, meetingInfo, publisher, password);
-        task.execute(dto.getTitle(),dto.getPlaceName(), dto.getMeetingInfo(), dto.getPublisher(), dto.getPassword());
+        task.execute(dto.getTitle(), dto.getPlaceName(), dto.getMeetingInfo(), dto.getPublisher(), dto.getPassword());
 
         return true;
     }
 
-    public void deleteInfo(int key){
+    public void deleteInfo(int key) {
         String meetingKey = String.valueOf(key);
-        class DeleteInfo extends AsyncTask<String, Void, String>{
+        class DeleteInfo extends AsyncTask<String, Void, String> {
             //ProgressDialog loading;
 
             @Override
@@ -127,11 +124,11 @@ public class MeetingDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
-                    String key = (String)params[0];
+                try {
+                    String key = (String) params[0];
 
-                    String link="http://210.94.194.201/deleteMeeting.php";
-                    String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+                    String link = "http://210.94.194.201/deleteMeeting.php";
+                    String data = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
@@ -139,7 +136,7 @@ public class MeetingDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -147,14 +144,12 @@ public class MeetingDAO extends DAO{
                     StringBuilder sb = new StringBuilder();
                     String line = null;
 
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
                     return sb.toString();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -165,9 +160,8 @@ public class MeetingDAO extends DAO{
         task.execute(meetingKey);
     }
 
-    public MeetingDTO select(int key)
-    {
-        class SelectData extends AsyncTask<String, Void, String>{
+    public MeetingDTO select(int key) {
+        class SelectData extends AsyncTask<String, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -178,12 +172,12 @@ public class MeetingDAO extends DAO{
             @Override
             protected void onPostExecute(String s) {
 
-                try{
+                try {
                     JSONObject jsonObj = new JSONObject(s);
                     JSONArray jsonArrayMeetingDTO = null;
                     jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
 
-                    for(int i=0;i<jsonArrayMeetingDTO.length();i++) {
+                    for (int i = 0; i < jsonArrayMeetingDTO.length(); i++) {
 
                         //MeetingDTO 객체를 생성
                         MeetingDTO meetingDTO = new MeetingDTO();
@@ -200,9 +194,9 @@ public class MeetingDAO extends DAO{
                         //MeetingDTO 객체를 ArrayList에 삽입
                         meetingDTOSelected = meetingDTO;
 
-                        Log.d("TESTING","MeetingDAO onPostExcute end");
+                        Log.d("TESTING", "MeetingDAO onPostExcute end");
                     }
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -210,16 +204,16 @@ public class MeetingDAO extends DAO{
             @Override
             protected String doInBackground(String... params) {
 
-                try{
+                try {
 
                     //String meetingKey = (String)params[0];
-                    String key = (String)params[0];
+                    String key = (String) params[0];
 
 
-                    String link="http://210.94.194.201/selectMeeting.php";
+                    String link = "http://210.94.194.201/selectMeeting.php";
                     //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
                     //meetingKey는 자동으로 설정됨
-                    String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+                    String data = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 
 
                     URL url = new URL(link);
@@ -228,7 +222,7 @@ public class MeetingDAO extends DAO{
                     conn.setDoOutput(true);
                     OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write( data );
+                    wr.write(data);
                     wr.flush();
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -237,17 +231,13 @@ public class MeetingDAO extends DAO{
                     String line = null;
 
                     // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
+                    while ((line = reader.readLine()) != null) {
                         sb.append(line);
                         break;
                     }
-                    Log.d("TESTING","MeetingDAO doInBackground end");
+                    Log.d("TESTING", "MeetingDAO doInBackground end");
                     return sb.toString();
-                }
-
-
-                catch(Exception e){
+                } catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
                 }
 
@@ -258,12 +248,11 @@ public class MeetingDAO extends DAO{
         SelectData task = new SelectData();
         task.execute(meetingKey);
 
-        Log.d("TESTING","MeetingDAO select end");
+        Log.d("TESTING", "MeetingDAO select end");
         return meetingDTOSelected;
     }
 
-    public ArrayList<MeetingDTO> selectAll()
-    {
+    public ArrayList<MeetingDTO> selectAll() {
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
@@ -280,27 +269,27 @@ public class MeetingDAO extends DAO{
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
                     String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
                     }
 
                     return sb.toString().trim();
 
-                }catch(Exception e){
+                } catch (Exception e) {
                     return null;
                 }
             }
 
             @Override
-            protected void onPostExecute(String result){
+            protected void onPostExecute(String result) {
                 arrayListMeetingDTO.clear();//업데이트를 위한 초기화부분
 
-                try{
+                try {
                     JSONObject jsonObj = new JSONObject(result);
                     JSONArray jsonArrayMeetingDTO = null;
                     jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
 
-                    for(int i=0;i<jsonArrayMeetingDTO.length();i++) {
+                    for (int i = 0; i < jsonArrayMeetingDTO.length(); i++) {
 
                         //MeetingDTO 객체를 생성
                         MeetingDTO meetingDTO = new MeetingDTO();
@@ -318,7 +307,7 @@ public class MeetingDAO extends DAO{
                         arrayListMeetingDTO.add(meetingDTO);
 
                     }
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }

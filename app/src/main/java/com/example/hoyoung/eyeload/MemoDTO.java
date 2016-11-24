@@ -1,18 +1,15 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
 
-import android.media.Image;
-
-import java.util.Date;
 
 /**
  * Created by Jin on 2016-11-5.
  */
 
-public class MemoDTO extends DTO{
+public class MemoDTO extends DTO {
 
 
     private int key;
-    private String title ;
+    private String title;
     private double x;
     private double y;
     private double z;

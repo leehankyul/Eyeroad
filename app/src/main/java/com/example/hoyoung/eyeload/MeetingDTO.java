@@ -1,13 +1,13 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
 
 /**
  * Created by Jin on 2016-11-5.
  */
 
-public class MeetingDTO extends DTO{
+public class MeetingDTO extends DTO {
 
     private int meetingKey;
-    private String title ;
+    private String title;
     private String placeName;
     private String meetingInfo;
     private String publisher;
@@ -22,11 +22,11 @@ public class MeetingDTO extends DTO{
     }
 
     public void setTitle(String title) {
-        this.title = title ;
+        this.title = title;
     }
 
     public String getTitle() {
-        return this.title ;
+        return this.title;
     }
 
     public String getPlaceName() {

@@ -1,23 +1,15 @@
-package kr.soen.mypart;
+package com.example.hoyoung.eyeload;
+
 
 /**
  * Created by Jin on 2016-10-8.
  */
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Created by Jin on 2016-11-5.
@@ -47,16 +39,16 @@ public class MakingMeetingActivity extends Activity {
 
     }
 
-    public void insert(View view){
+    public void insert(View view) {
         //String meetingKey = editTextKey.getText().toString();
         String title = editTextTitle.getText().toString();
         String placeName = editTextPlaceName.getText().toString();
         String meetingInfo = editTextMeetingInfo.getText().toString();
         String publisher = editTextPublisher.getText().toString();
         String password = editTextPassword.getText().toString();
-        Toast.makeText(MakingMeetingActivity.this, title+" is opened.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MakingMeetingActivity.this, title + " is opened.", Toast.LENGTH_SHORT).show();
         //insertToDatabase(meetingKey, title, placeName,meetingInfo,publisher,password);
-        control.setInfo(title, placeName,meetingInfo,publisher,password);
+        control.setInfo(title, placeName, meetingInfo, publisher, password);
 
     }
 
