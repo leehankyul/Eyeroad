@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class MemoControl extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList 및 서버로부터 받은 DTO list
-    private ArrayList<MemoDTO> memoList = new ArrayList<>();
+    private ArrayList<MemoDTO> memoList = new ArrayList<MemoDTO>();
     private MemoDTO memoDTOSelected = new MemoDTO();
     private MemoDAO memoDAO = new MemoDAO();
 
@@ -91,21 +91,23 @@ public class MemoControl extends BaseAdapter {
         return memoList.get(position) ;
     }
 
-    public void getMemo(int key)
+    public MemoDTO getMemo(int key)
     {
         memoDTOSelected = memoDAO.select(key);
+        return memoDTOSelected;
         //Log.d("TEST","MemoControl getMemo " + memoDTOSelected.getTitle());
     }
 
     //DB에서 DTO를 가져오는 함수
-    public void getAllMemo()
+    public void getAllMemo(int deviceId)
     {
-
+        //deviceId에 따라 메모 선택부분 추가해야됨
         memoList = memoDAO.selectAll();
-        //Log.d("print","memoControl's memoList size : "+ String.valueOf(memoList.size()) );
+        Log.d("TESTING","MemoControl memoList size : "+  memoList.size());
+
     }
 
-    public void setInfo(String title,Double x,Double y,Double z,String content, String date,String image,int iconId,String deviceID,int visibility)
+    public boolean setInfo(String title,Double x,Double y,Double z,String content, String date,String image,int iconId,String deviceID,int visibility)
     {
         MemoDTO memoDTO = new MemoDTO();
         //memoDTO.setKey(memoKey);
@@ -119,11 +121,11 @@ public class MemoControl extends BaseAdapter {
         memoDTO.setIconId(iconId);
         memoDTO.setDeviceID(deviceID);
         memoDTO.setVisibility(visibility);
-        memoDAO.insert(memoDTO);
+        return memoDAO.insert(memoDTO);
     }
-    public void deleteInfo(int key)
+    public boolean deleteInfo(int key)
     {
-        memoDAO.delete(key);
+        return memoDAO.delete(key);
     }
 
 

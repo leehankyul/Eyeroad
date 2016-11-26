@@ -1,7 +1,9 @@
 package kr.soen.mypart;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -9,9 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -70,17 +76,17 @@ public class MakingMemoAcitivity extends AppCompatActivity {
                 mIconID=3;
             }
         });
-        final CheckedTextView ctv = (CheckedTextView) findViewById(R.id.public_or_private);
-        ctv.setOnClickListener(new View.OnClickListener() {
+        CheckBox checkbox = (CheckBox) findViewById(R.id.public_or_private);
+        checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (ctv.isChecked()) {
-                    ctv.setChecked(false);
-                    mSelectedIndexSet=1;
-                }
-                else {
-                    ctv.setChecked(true);
-                    mSelectedIndexSet=0;
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if (buttonView.getId() == R.id.public_or_private) {
+                    if (isChecked) {
+                        mSelectedIndexSet=1;
+                    } else {
+                        mSelectedIndexSet=0;
+                    }
                 }
             }
         });
@@ -97,13 +103,9 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     }
     public void makeMemo()
     {
-        Log.d("TEST","MakingMemoActi : " + mImageString);
-        control.setInfo(mTitleText.getText().toString(),(double)1,(double)1,(double)1,mBodyText.getText().toString(),"2010",mImageString,mIconID,"deviceId",mSelectedIndexSet);
-        /*Log.d("TESTING","MakingMemoActivity");
-        Log.d("TESTING","mTitleText:" + mTitleText.getText().toString());
-        Log.d("TESTING","mBodyTest:" + mBodyText.getText().toString());
-        Log.d("TESTING","mIconID:" + mIconID);
-        Log.d("TESTING","mSelectedIndexSet:" + mSelectedIndexSet);*/
+
+        InsertMemo insertMemo = new InsertMemo();
+        insertMemo.execute(mTitleText.getText().toString(),"1","1","1",mBodyText.getText().toString(),"2010",mImageString,String.valueOf(mIconID),"deviceId",String.valueOf(mSelectedIndexSet));
 
     }
 
@@ -125,4 +127,46 @@ public class MakingMemoAcitivity extends AppCompatActivity {
         return profileImageBase64;
     }
 
+
+    class InsertMemo extends AsyncTask<String, Void, Boolean> {
+        ProgressDialog loading;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = new ProgressDialog(MakingMemoAcitivity.this);
+            loading.setMessage("메모를 저장하는 중입니다.");
+
+            loading.show();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean flag) {
+            super.onPostExecute(flag);
+            loading.dismiss();
+
+            if(flag == true) {
+                Toast.makeText(getApplicationContext(), "메모 저장 완료", Toast.LENGTH_LONG).show();
+            }
+            else
+                Toast.makeText(getApplicationContext(), "모임 저장 실패!", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String ...params) {
+
+            String title = (String)params[0];
+            Double x = Double.valueOf(params[1]);
+            Double y = Double.valueOf(params[2]);
+            Double z = Double.valueOf(params[3]);
+            String content = (String)params[4];
+            String date = (String)params[5];
+            String image = (String)params[6];
+            int iconId = Integer.valueOf(params[7]);
+            String deviceID = (String)params[8];
+            int visibility = Integer.valueOf(params[9]);
+
+            return control.setInfo(title,x,y,z,content,date,image,iconId,deviceID,visibility);
+        }
+    }
 }

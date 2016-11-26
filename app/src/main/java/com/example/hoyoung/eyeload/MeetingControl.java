@@ -91,10 +91,11 @@ public class MeetingControl extends BaseAdapter {
         return meetingList.get(position) ;
     }
 
-    public void getMeeting(int key)
+    public MeetingDTO getMeeting(int key)
     {
         meetingDTOSelected = meetingDAO.select(key);
         Log.d("TESTING","MeetingControl getMeeting " + meetingDTOSelected.getTitle());
+        return meetingDTOSelected;
     }
 
     public MeetingDTO getMeetingTest()
@@ -107,7 +108,7 @@ public class MeetingControl extends BaseAdapter {
         meetingList = meetingDAO.selectAll();
     }
 
-    public void setInfo(String title,String placeName,String meetingInfo,String publisher, String password)
+    public boolean setInfo(String title,String placeName,String meetingInfo,String publisher, String password)
     {
         MeetingDTO meetingDTO = new MeetingDTO();
         meetingDTO.setTitle(title);
@@ -115,11 +116,11 @@ public class MeetingControl extends BaseAdapter {
         meetingDTO.setMeetingInfo(meetingInfo);
         meetingDTO.setPublisher(publisher);
         meetingDTO.setPassword(password);
-        meetingDAO.insert(meetingDTO);
+        return meetingDAO.insert(meetingDTO);
     }
 
-   public void deleteInfo(int key)
+   public boolean deleteInfo(int key)
    {
-       meetingDAO.deleteInfo(key);
+       return meetingDAO.deleteInfo(key);
    }
 }
