@@ -1,15 +1,23 @@
-package com.example.hoyoung.eyeload;
-
+package kr.soen.mypart;
 
 /**
  * Created by Jin on 2016-10-8.
  */
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * Created by Jin on 2016-11-5.
@@ -18,7 +26,7 @@ import android.widget.Toast;
 public class MakingMeetingActivity extends Activity {
 
     MeetingControl control = MeetingControl.getInstance();
-    //private EditText editTextKey;
+
     private EditText editTextTitle;
     private EditText editTextPlaceName;
     private EditText editTextMeetingInfo;
@@ -39,19 +47,55 @@ public class MakingMeetingActivity extends Activity {
 
     }
 
-    public void insert(View view) {
-        //String meetingKey = editTextKey.getText().toString();
+    public void insert(View view){
+
         String title = editTextTitle.getText().toString();
         String placeName = editTextPlaceName.getText().toString();
         String meetingInfo = editTextMeetingInfo.getText().toString();
         String publisher = editTextPublisher.getText().toString();
         String password = editTextPassword.getText().toString();
-        Toast.makeText(MakingMeetingActivity.this, title + " is opened.", Toast.LENGTH_SHORT).show();
-        //insertToDatabase(meetingKey, title, placeName,meetingInfo,publisher,password);
-        control.setInfo(title, placeName, meetingInfo, publisher, password);
+
+        InsertMeeting insertMeeting = new InsertMeeting();
+        insertMeeting.execute(title,placeName,meetingInfo,publisher,password);
+        finish();
 
     }
 
-    //private void insertToDatabase(String meetingKey, String title,String placeName,String meetingInfo,String publisher, String password){
+    //Memo를 DB로 보내고 UI에 적용하기 위한 쓰레드
+    class InsertMeeting extends AsyncTask<String, Void, Boolean> {
+        ProgressDialog loading;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = new ProgressDialog(MakingMeetingActivity.this);
+            loading.setMessage("모임을 개최하는 중입니다.");
+            //loading.setProgressStyle(loading.STYLE_SPINNER);
+            loading.show();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean flag) {
+            super.onPostExecute(flag);
+            loading.dismiss();
+
+            if(flag == true) {
+                Toast.makeText(getApplicationContext(), "모임 개최 완료", Toast.LENGTH_LONG).show();
+            }
+            else
+                Toast.makeText(getApplicationContext(), "모임 개최 실패!", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String ...params) {
+
+            String title = (String)params[0];
+            String placeName = (String)params[1];
+            String meetingInfo = (String)params[2];
+            String publisher = (String)params[3];
+            String password = (String)params[4];
+
+            return control.setInfo(title,placeName,meetingInfo,publisher,password);
+        }
+    }
 }

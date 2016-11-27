@@ -1,17 +1,26 @@
-package com.example.hoyoung.eyeload;
+package kr.soen.mypart;
 
 /**
  * Created by Jin on 2016-11-5.
  */
 
-public class MeetingDTO extends DTO {
+public class MeetingDTO extends DTO{
 
     private int meetingKey;
-    private String title;
+    private String title ;
     private String placeName;
     private String meetingInfo;
     private String publisher;
     private String password;
+
+    public MeetingDTO()
+    {
+        title = null;
+        placeName = null;
+        meetingInfo = null;
+        publisher = null;
+        password = "1234"; // default 비밀번호 값
+    }
 
     public int getKey() {
         return meetingKey;
@@ -22,11 +31,11 @@ public class MeetingDTO extends DTO {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title ;
     }
 
     public String getTitle() {
-        return this.title;
+        return this.title ;
     }
 
     public String getPlaceName() {
