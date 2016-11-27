@@ -2,6 +2,7 @@ package kr.soen.mypart;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +93,7 @@ public class MemoControl extends BaseAdapter {
         return memoList.get(position) ;
     }
 
+    //DB에서 MemoKey값이 key인 DTO를 불러오는 함수
     public MemoDTO getMemo(int key)
     {
         memoDTOSelected = memoDAO.select(key);
@@ -99,17 +101,35 @@ public class MemoControl extends BaseAdapter {
         //Log.d("TEST","MemoControl getMemo " + memoDTOSelected.getTitle());
     }
 
-    //DB에서 DTO를 가져오는 함수
+    //DB에서 모든 DTO를 가져오는 함수
     public void getAllMemo()
     {
-
         memoList = memoDAO.selectAll();
+    }
+
+    //DB에서 DeviceID값이 같은 모든 DTO를 불러오는 함수
+    public boolean getAllPersonalMemo()
+    {
+        try {
+            String deviceID;
+            deviceID = String.valueOf(Build.class.getField("SERIAL").get(null));
+            memoList = memoDAO.selectAllMemo(deviceID);
+
+            return true;
+        }catch (Exception e)
+        {
+            e.getMessage();
+            return false;
+        }
 
     }
 
+
+    //매개변수의 값을 가진 DTO를 DB에 저장하는 함수
     public boolean setInfo(String title, Double x, Double y, Double z, String content, Date date, String image, int iconId, String deviceID, int visibility)
     {
         MemoDTO memoDTO = new MemoDTO();
+
         //memoDTO.setKey(memoKey);
         memoDTO.setTitle(title);
         memoDTO.setX(x);
@@ -121,8 +141,11 @@ public class MemoControl extends BaseAdapter {
         memoDTO.setIconId(iconId);
         memoDTO.setDeviceID(deviceID);
         memoDTO.setVisibility(visibility);
+
         return memoDAO.insert(memoDTO);
     }
+
+    //DB에서 MeetingKey값이 key인 DTO를 삭제하는 함수
     public boolean deleteInfo(int key)
     {
         return memoDAO.delete(key);

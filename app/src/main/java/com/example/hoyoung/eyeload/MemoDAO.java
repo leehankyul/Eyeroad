@@ -46,8 +46,8 @@ public class MemoDAO extends DAO{
 
         try {
             String link = "http://210.94.194.201/insertMemo.php";
-            //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
-            //meetingKey는 자동으로 설정됨
+            //String data  = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(memoKey, "UTF-8");
+            //memoKey는 자동으로 설정됨
             String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(title, "UTF-8");
             data += "&" + URLEncoder.encode("x", "UTF-8") + "=" + URLEncoder.encode(x, "UTF-8");
             data += "&" + URLEncoder.encode("y", "UTF-8") + "=" + URLEncoder.encode(y, "UTF-8");
@@ -78,12 +78,16 @@ public class MemoDAO extends DAO{
                 sb.append(line);
                 break;
             }
-            return true;
+            if(sb.toString().equals("success"))
+                return true;
+            else
+                return false;
         } catch (Exception e) {
             return false;
         }
     }
 
+    //DB에서 MemoKey값이 key인 DTO를 삭제하는 함수
     public boolean delete(int key){
 
         try{
@@ -111,8 +115,11 @@ public class MemoDAO extends DAO{
                 sb.append(line);
                 break;
             }
-            Log.d("TESTING","MemoDAO sb : "+ sb.toString() );
-            return true;
+
+            if(sb.toString().equals("success"))
+                return true;
+            else
+                return false;
         }
         catch(Exception e){
             return false;
@@ -126,8 +133,8 @@ public class MemoDAO extends DAO{
 
         try{
             String link="http://210.94.194.201/selectMemo.php";
-            //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
-            //meetingKey는 자동으로 설정됨
+
+            //memoKey는 자동으로 설정됨
             String data  = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(memoKey, "UTF-8");
 
 
@@ -181,16 +188,13 @@ public class MemoDAO extends DAO{
         }
     }
 
-    public ArrayList<MemoDTO> selectAll() {
+    public ArrayList<MemoDTO> selectAllMemo(String deviceID) {
         try {
 
             BufferedReader bufferedReader = null;
-            String deviceID;
             //Device ID를 가져오는 부분
 
-            deviceID = String.valueOf(Build.class.getField("SERIAL").get(null));
-
-            String link = "http://210.94.194.201/selectAllMemo.php";
+            String link = "http://210.94.194.201/selectAllPersonalMemo.php";
             String data  = URLEncoder.encode("deviceID", "UTF-8") + "=" + URLEncoder.encode(deviceID, "UTF-8");
 
             URL url = new URL(link);
@@ -246,6 +250,68 @@ public class MemoDAO extends DAO{
 
                 arrayListMemoDTO.add(memoDTO);
             }
+            return arrayListMemoDTO;
+        }catch(Exception e){
+            return null;
+        }
+
+    }
+
+    public ArrayList<MemoDTO> selectAll() {
+        try {
+
+            BufferedReader bufferedReader = null;
+            //Device ID를 가져오는 부분
+
+            String link = "http://210.94.194.201/selectAllMemo.php";
+
+            URL url = new URL(link);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            StringBuilder sb = new StringBuilder();
+
+            bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+            String json;
+            while ((json = bufferedReader.readLine()) != null) {
+                sb.append(json + "\n");
+
+            }
+
+            String result = sb.toString().trim();
+            arrayListMemoDTO.clear();//업데이트를 위한 초기화부분
+
+            JSONObject jsonObj = new JSONObject(result);
+            JSONArray jsonArrayMemoDTO = null;
+            jsonArrayMemoDTO = jsonObj.getJSONArray("result");
+
+            for (int i = 0; i < jsonArrayMemoDTO.length(); i++) {
+
+                //MeetingDTO 객체를 생성
+                MemoDTO memoDTO = new MemoDTO();
+
+                JSONObject c = jsonArrayMemoDTO.getJSONObject(i);
+
+                //string -> date 변환
+                DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+                Date date = sdFormat.parse(c.getString("date"));
+
+                memoDTO.setKey(Integer.parseInt(c.getString("memoKey")));
+                memoDTO.setTitle(c.getString("title"));
+                memoDTO.setX(Double.parseDouble(c.getString("x")));
+                memoDTO.setY(Double.parseDouble(c.getString("y")));
+                memoDTO.setZ(Double.parseDouble(c.getString("z")));
+                memoDTO.setContent(c.getString("content"));
+                memoDTO.setDate(date);
+                memoDTO.setImage(c.getString("image"));
+                memoDTO.setIconId(Integer.parseInt(c.getString("iconId")));
+                memoDTO.setDeviceID(c.getString("deviceID"));
+                memoDTO.setVisibility(Integer.parseInt(c.getString("visibility")));
+
+
+
+                arrayListMemoDTO.add(memoDTO);
+            }
                 return arrayListMemoDTO;
             }catch(Exception e){
                 return null;
@@ -253,264 +319,4 @@ public class MemoDAO extends DAO{
 
         }
 
-
-    /*public MemoDTO select(int key)
-    {
-        class SelectData extends AsyncTask<String, Void, String>{
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //loading = ProgressDialog.show(MakingMeetingActivity.this, "Please Wait", null, true, true);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-
-                try{
-                    JSONObject jsonObj = new JSONObject(s);
-                    JSONArray jsonArrayMemoDTO = null;
-                    jsonArrayMemoDTO = jsonObj.getJSONArray("result");
-                    //Log.d("print","meetingListLength : "+ String.valueOf(jsonArrayMeetingDTO.length()) );
-                    for(int i=0;i<jsonArrayMemoDTO.length();i++) {
-                        //MeetingDTO 객체를 생성
-                        MemoDTO memoDTO = new MemoDTO();
-
-                        JSONObject c = jsonArrayMemoDTO.getJSONObject(i);
-                        //MemoDTO 객체에 정보 삽입
-                        //memoDTO.setKey(Integer.parseInt(c.getString("memoKey")));
-                        memoDTO.setTitle(c.getString("title"));
-                        memoDTO.setX(Double.valueOf(c.getString("x")));
-                        memoDTO.setY(Double.valueOf(c.getString("y")));
-                        memoDTO.setZ(Double.valueOf(c.getString("z")));
-                        memoDTO.setContent(c.getString("content"));
-                        memoDTO.setDate(c.getString("date"));
-                        memoDTO.setImage(c.getString("image"));
-                        memoDTO.setIconId(Integer.valueOf(c.getString("iconId")));
-                        memoDTO.setDeviceID(c.getString("deviceID"));
-                        memoDTO.setVisibility(Integer.valueOf(c.getString("visibility")));
-                        //MeetingDTO 객체를 ArrayList에 삽입
-                        memoDTOSelected = memoDTO;
-
-                    }
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                try{
-
-                    //String memoKey = (String)params[0];
-                    String key = (String)params[0];
-
-
-                    String link="http://210.94.194.201/selectMemo.php";
-                    //String data  = URLEncoder.encode("meetingKey", "UTF-8") + "=" + URLEncoder.encode(meetingKey, "UTF-8");
-                    //meetingKey는 자동으로 설정됨
-                    String data  = URLEncoder.encode("memoKey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
-
-
-                    URL url = new URL(link);
-                    URLConnection conn = url.openConnection();
-
-                    conn.setDoOutput(true);
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-
-                    wr.write( data );
-                    wr.flush();
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                    StringBuilder sb = new StringBuilder();
-                    String line = null;
-
-                    // Read Server Response
-                    while((line = reader.readLine()) != null)
-                    {
-                        sb.append(line);
-                        break;
-                    }
-
-                    return sb.toString();
-                }
-
-
-                catch(Exception e){
-                    return new String("Exception: " + e.getMessage());
-                }
-
-            }
-
-
-        }
-        String memoKey = String.valueOf(key);
-        SelectData task = new SelectData();
-        task.execute(memoKey);
-
-        return memoDTOSelected;
-    }*/
-
-    /*public ArrayList<MemoDTO> selectAll()
-    {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                String uri = params[0];
-
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(uri);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
-                    }
-
-                    return sb.toString().trim();
-
-                }catch(Exception e){
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String result){
-                arrayListMemoDTO.clear();//업데이트를 위한 초기화부분
-
-                try{
-                    JSONObject jsonObj = new JSONObject(result);
-                    JSONArray jsonArrayMemoDTO = null;
-                    jsonArrayMemoDTO = jsonObj.getJSONArray("result");
-
-                    for(int i=0;i<jsonArrayMemoDTO.length();i++) {
-
-                        //MeetingDTO 객체를 생성
-                        MemoDTO memoDTO = new MemoDTO();
-
-                        JSONObject c = jsonArrayMemoDTO.getJSONObject(i);
-
-                        memoDTO.setKey(Integer.parseInt(c.getString("memoKey")));
-                        memoDTO.setTitle(c.getString("title"));
-                        memoDTO.setX(Double.parseDouble(c.getString("x")));
-                        memoDTO.setY(Double.parseDouble(c.getString("y")));
-                        memoDTO.setZ(Double.parseDouble(c.getString("z")));
-                        memoDTO.setContent(c.getString("content"));
-                        memoDTO.setDate(c.getString("date"));
-                        memoDTO.setImage(c.getString("image"));
-                        memoDTO.setIconId(Integer.parseInt(c.getString("iconId")));
-                        memoDTO.setDeviceID(c.getString("deviceID"));
-                        memoDTO.setVisibility(Integer.parseInt(c.getString("visibility")));
-                        arrayListMemoDTO.add(memoDTO);
-                    }
-
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute("http://210.94.194.201/selectAllMemo.php");
-
-        return arrayListMemoDTO;
-    }
-    */
-
-    /*public ArrayList<MemoDTO> selectAll()
-    {
-        getAllData("http://210.94.194.201/selectAllMemo.php");
-        Log.d("print","memoDAO arrayListMemoDTO's size : "+ String.valueOf(arrayListMemoDTO.size()) );
-        return arrayListMemoDTO;
-    }
-
-    protected void showList(String myJSON) {
-
-        arrayListMemoDTO.clear();//업데이트를 위한 초기화부분
-        int tmp;
-        try{
-            JSONObject jsonObj = new JSONObject(myJSON);
-            JSONArray jsonArrayMemoDTO = null;
-            jsonArrayMemoDTO = jsonObj.getJSONArray("result");
-            Log.d("print","memoListLength : "+ String.valueOf(jsonArrayMemoDTO.length()) );
-            for(int i=0;i<jsonArrayMemoDTO.length();i++) {
-
-                //MeetingDTO 객체를 생성
-                MemoDTO memoDTO = new MemoDTO();
-
-                JSONObject c = jsonArrayMemoDTO.getJSONObject(i);
-
-                Log.d("print","memoKey : "+ c.getString("memoKey") );
-                Log.d("print","title : "+ c.getString("title") );
-                Log.d("print","x : "+ c.getString("x") );
-                Log.d("print","y : "+ c.getString("y") );
-                Log.d("print","z : "+ c.getString("z") );
-                Log.d("print","content : "+ c.getString("content") );
-                Log.d("print","date : "+ c.getString("date") );
-                Log.d("print","image : "+ c.getString("image") );
-                Log.d("print","iconId : "+ c.getString("iconld") );
-                Log.d("print","deviceID : "+ c.getString("deviceID") );
-                Log.d("print","visibility : "+ c.getString("visibility") );
-                memoDTO.setKey(Integer.parseInt(c.getString("memoKey")));
-                memoDTO.setTitle(c.getString("title"));
-                memoDTO.setX(Double.parseDouble(c.getString("x")));
-                memoDTO.setY(Double.parseDouble(c.getString("y")));
-                memoDTO.setZ(Double.parseDouble(c.getString("z")));
-                memoDTO.setContent(c.getString("content"));
-                memoDTO.setDate(c.getString("date"));
-                memoDTO.setImage(c.getString("image"));
-                memoDTO.setIconId(Integer.parseInt(c.getString("iconId")));
-                memoDTO.setDeviceID(c.getString("deviceID"));
-                memoDTO.setVisibility(Integer.parseInt(c.getString("visibility")));
-                arrayListMemoDTO.add(memoDTO);
-            }
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    public void getAllData(String url)
-    {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                String uri = params[0];
-
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(uri);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
-                    }
-
-                    return sb.toString().trim();
-
-                }catch(Exception e){
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String result){
-                showList(result);
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute(url);
-    }*/
 }

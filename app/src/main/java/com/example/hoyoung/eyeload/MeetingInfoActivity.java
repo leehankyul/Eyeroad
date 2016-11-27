@@ -1,12 +1,15 @@
 package kr.soen.mypart;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,24 +27,22 @@ import java.net.URLEncoder;
 public class MeetingInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     private int key;
-    private MeetingControl control = MeetingControl.getInstance();
+    private MeetingControl control;
     private TextView meeting_name_text;
     private TextView meeting_content_text;
     private TextView meeting_place_text;
-
-    public MeetingInfoActivity()
-    {
-
-    }
+    private AlertDialog.Builder alert;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = new Intent(this.getIntent());
         String meetingKey = intent.getStringExtra("meetingKey");
         key = Integer.valueOf(meetingKey);
-
+        alert = new AlertDialog.Builder(MeetingInfoActivity.this);
+        control = MeetingControl.getInstance(); // MeetingControl은 싱글톤
         setContentView(R.layout.activity_meeting_info);
         findViewById(R.id.meeting_delete).setOnClickListener(this);
+
         meeting_name_text = (TextView)findViewById(R.id.meeting_name);
         meeting_content_text = (TextView)findViewById(R.id.meeting_content);
         meeting_place_text = (TextView)findViewById(R.id.meeting_place);
@@ -66,11 +67,36 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
 
     public void deleteMeeting()
     {
-        DeleteMeeting deleteMeeting = new DeleteMeeting();
-        deleteMeeting.execute(key);
+
+        final String stringKey = String.valueOf(key);
+
+        alert.setTitle("비밀번호를 입력하시오.");
+        //alert.setMessage("");
+
+
+        final EditText passwordAlert = new EditText(this);
+        alert.setView(passwordAlert);
+
+        alert.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.setPositiveButton("입력", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                String password = passwordAlert.getText().toString();
+
+                DeleteMeeting deleteMeeting = new DeleteMeeting();
+                deleteMeeting.execute(stringKey,password);
+            }
+        });
+
+        alert.show();
     }
 
 
+    //선택된 Meeting을 UI에 적용하기 위한 쓰레드
     class SelectMeeting extends AsyncTask<Integer, Void, MeetingDTO> {
         ProgressDialog loading;
 
@@ -106,7 +132,8 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    class DeleteMeeting extends AsyncTask<Integer, Void, Boolean> {
+    //선택된 Meeting 삭제하고 UI에 적용하기 위한 쓰레드
+    class DeleteMeeting extends AsyncTask<String, Void, Boolean> {
         ProgressDialog loading;
 
         @Override
@@ -125,15 +152,16 @@ public class MeetingInfoActivity extends AppCompatActivity implements View.OnCli
 
             if(flag == true) {
                 Toast.makeText(getApplicationContext(), "모임 삭제 완료", Toast.LENGTH_LONG).show();
+                finish();
             }
             else
                 Toast.makeText(getApplicationContext(), "모임 삭제 실패!", Toast.LENGTH_LONG).show();
         }
 
         @Override
-        protected Boolean doInBackground(Integer... params) {
+        protected Boolean doInBackground(String... params) {
 
-            return control.deleteInfo(params[0]);
+            return control.deleteInfo(params[0],params[1]);
 
         }
     }

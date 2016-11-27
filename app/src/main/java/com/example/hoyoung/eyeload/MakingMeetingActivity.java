@@ -60,6 +60,8 @@ public class MakingMeetingActivity extends Activity {
         finish();
 
     }
+
+    //Memo를 DB로 보내고 UI에 적용하기 위한 쓰레드
     class InsertMeeting extends AsyncTask<String, Void, Boolean> {
         ProgressDialog loading;
 

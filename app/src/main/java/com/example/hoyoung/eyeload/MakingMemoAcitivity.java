@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MakingMemoAcitivity extends AppCompatActivity {
-    private MemoControl control = MemoControl.getInstance();
+    private MemoControl control;
     private EditText mTitleText;
     private EditText mBodyText;
     private ImageView mImage;
@@ -39,16 +39,20 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     private int mIconID;
     final static int ACT_EDIT = 0;
     private int mSelectedIndexSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_making_memo_acitivity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setTitle("메모 만들기");
+        control = MemoControl.getInstance(); // MemoControl은 싱글톤
+
         mTitleText = (EditText) findViewById(R.id.title);
         mBodyText = (EditText) findViewById(R.id.body);
         selectedIcon = (ImageView) findViewById(R.id.selected_icon_img);
         mImage = (ImageView) findViewById(R.id.imageresult);
+
         findViewById(R.id.imageupload).setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
@@ -106,6 +110,8 @@ public class MakingMemoAcitivity extends AppCompatActivity {
         });
 
     }
+
+    //메모를 만들어 DB처리하는 함수
     public void makeMemo()
     {
         String deviceID = null;
@@ -145,7 +151,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
         return profileImageBase64;
     }
 
-
+    //Memo를 DB로 보내고 UI에 적용하기 위한 쓰레드
     class InsertMemo extends AsyncTask<String, Void, Boolean> {
         ProgressDialog loading;
 
@@ -167,7 +173,7 @@ public class MakingMemoAcitivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "메모 저장 완료", Toast.LENGTH_LONG).show();
             }
             else
-                Toast.makeText(getApplicationContext(), "모임 저장 실패!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "메모 저장 실패!", Toast.LENGTH_LONG).show();
         }
 
         @Override

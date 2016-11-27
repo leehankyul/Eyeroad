@@ -93,7 +93,7 @@ public class MemoManagementActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            control.getAllMemo();
+            control.getAllPersonalMemo();
 
             return null;
         }
