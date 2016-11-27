@@ -8,12 +8,12 @@
     tools:context=".ShowMapActivity" >
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:id="@+id/start"
 
         android:layout_gravity="center_horizontal|bottom"
-        android:src="@drawable/button2"
+        android:src="@drawable/gotoarbutton"
         android:onClick="gotoARActivity"/>
 
-    </fragment>
+</fragment>

@@ -3,16 +3,27 @@ package com.example.hoyoung.eyeload;
 /**
  * Created by YoungHoonKim on 11/14/16.
  */
-import android.app.Activity;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
-
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,22 +33,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
-
 /**
  * Created by YoungHoonKim on 11/8/16.
  */
-
 
 
 public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -54,13 +52,12 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_show_map);
         Intent intent = getIntent();
         path = new ArrayList<>();
         //TmapActivity에서 찾은 경로정보를 불러옴
         path = (ArrayList<HashMap<String, Double>>) intent.getSerializableExtra("path");
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
     }
@@ -74,15 +71,13 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
         FetchUrl fetchUrl = new FetchUrl();
         fetchUrl.execute(url);
     }
-    public void gotoARActivity(View view)
-    {
-        Toast.makeText(getApplicationContext(),"증강현실로 넘어갑니다",Toast.LENGTH_LONG).show();
-        //다음 엑티비티로 넘어가는 기능을 위해선 uncomment하시오
-            /*
-            Intent intent=new Intent(showMapActivity.this,그다음 액티비티.class);
-            intent.putExtra("path",path);
-            startActivity(intent);
-            */
+
+    public void gotoARActivity(View view) {
+        Toast.makeText(getApplicationContext(), "증강현실로 넘어갑니다", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(ShowMapActivity.this, ARActivity.class);
+        intent.putExtra("path", path);
+        startActivity(intent);
+
     }
 
     private synchronized String getUrl() {
@@ -90,7 +85,7 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
         String locations = "";
         for (int i = 0; i < path.size(); i++) {
             locations = locations + String.valueOf(path.get(i).get("lat") + "," + path.get(i).get("lon"));
-            if (i < path.size()-1) {
+            if (i < path.size() - 1) {
                 locations = locations + "|";
             }
         }
@@ -103,7 +98,6 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
         // Output format
 
     }
-
 
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -219,19 +213,28 @@ public class ShowMapActivity extends FragmentActivity implements OnMapReadyCallb
             for (int j = 0; j < path.size(); j++) {
                 latLng = new LatLng(path.get(j).get("lat"), path.get(j).get("lon"));
                 points.add(latLng);
-                path.get(j).put("ele",result.get(j));
+                path.get(j).put("ele", result.get(j));
             }
             lineOptions.addAll(points);
             lineOptions.width(10);
             lineOptions.color(Color.RED);
             //폴리라인을 그림
             if (lineOptions != null) {
+                MarkerOptions options = new MarkerOptions();
+                latLng = new LatLng(path.get(0).get("lat"), path.get(0).get("lon"));
+                options.position(latLng);
+                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                mMap.addMarker(options);
+                latLng = new LatLng(path.get(path.size() - 1).get("lat"), path.get(path.size() - 1).get("lon"));
+                options.position(latLng);
+                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                mMap.addMarker(options);
+
                 mMap.addPolyline(lineOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(points.get(0)));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-            } else {
+            } else
                 Log.d("onPostExecute", "without Polylines drawn");
-            }
 
         }
 

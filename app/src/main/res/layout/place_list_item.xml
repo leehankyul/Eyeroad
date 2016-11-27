@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cont_Ritem_root"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@drawable/background_state_drawable"
+    android:clickable="true"
+    >
+    <ImageView
+        android:id="@+id/im_Ritem_icon"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/searchmarker"/>
+
+    <TextView
+        android:id="@+id/lbl_Ritem_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="72dp"
+        android:layout_marginRight="32dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="17dp"/>
+
+    <TextView
+        android:id="@+id/lbl_Ritem_writer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lbl_Ritem_book"
+        android:layout_marginLeft="72dp"
+        android:layout_marginRight="32dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="17dp"/>
+
+</RelativeLayout>
