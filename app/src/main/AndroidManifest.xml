@@ -1,33 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kr.soen.mypart">
-    <uses-permission android:name="android.permission.INTERNET" />
+    package="com.example.hoyoung.eyeload">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IntroActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".MemoManagementActivity" />
-        <activity android:name=".ArViewActivity" />
-        <activity android:name=".MakingMemoAcitivity" />
-        <activity android:name=".CameraCropActivity"/>
-        <activity android:name=".BuildingInfoActivity" />
-        <activity android:name=".MakingMeetingActivity" />
-        <activity android:name=".MeetingInfoActivity" />
-        <activity android:name=".MeetingListActivity"/>
-        <activity android:name=".MemoInfoActivity"></activity>
-=======
 <<<<<<< HEAD
         <activity android:name=".ARActivity"></activity>
         <activity android:name=".CameraCropActivity"></activity>
@@ -51,7 +36,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyATwPEYORqCZHINYU9C-JIucDUKq2Pozgs"/>
 >>>>>>> refs/remotes/origin/master
->>>>>>> refs/remotes/harrond/master
     </application>
-
+    <uses-feature android:name="android.hardware.Camera" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_CORSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 </manifest>
