@@ -22,9 +22,10 @@ import java.net.URLEncoder;
 
 public class MemoInfoActivity extends AppCompatActivity implements View.OnClickListener{
     private int key;
-    private MemoControl control = MemoControl.getInstance();
+    private MemoControl control;
     private TextView memo_name_text;
     private TextView memo_content_text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +34,35 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
 
         memo_name_text=(TextView)findViewById(R.id.memoInfoName);
         memo_content_text=(TextView)findViewById(R.id.memoInfoContent);
+        control = MemoControl.getInstance();
 
         Intent intent = new Intent(this.getIntent());
         String memoKey = intent.getStringExtra("memoKey");
         key = Integer.valueOf(memoKey);
 
+        showMemoInfo();
+
+    }
+
+    public void onClick(View v) { // 메뉴의 버튼 선택 시 activity 이동
+        switch (v.getId()) {
+            case R.id.memoInfoDelete:
+                deleteMemo();
+        }
+    }
+
+    public void showMemoInfo()
+    {
         SelectMemo selectMemo = new SelectMemo();
         selectMemo.execute(key);
+    }
+
+    public void deleteMemo()
+    {
+
+        DeleteMemo deleteMemo = new DeleteMemo();
+        deleteMemo.execute(key);
+        finish();
     }
 
     class SelectMemo extends AsyncTask<Integer, Void, MemoDTO> {
@@ -63,7 +86,7 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
                 memo_name_text.setText(memoDTO.getTitle());
                 memo_content_text.setText(memoDTO.getContent());
 
-                Toast.makeText(getApplicationContext(), "메모 검색 완료", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "메모 검색 완료", Toast.LENGTH_LONG).show();
             }
             else
                 Toast.makeText(getApplicationContext(), "메모 검색 실패!", Toast.LENGTH_LONG).show();
@@ -75,26 +98,6 @@ public class MemoInfoActivity extends AppCompatActivity implements View.OnClickL
             return control.getMemo(params[0]);
 
         }
-    }
-
-
-    public void onClick(View v) { // 메뉴의 버튼 선택 시 activity 이동
-        switch (v.getId()) {
-            case R.id.memoInfoDelete:
-                deleteMemo();
-        }
-    }
-
-    public void showMemoInfo()
-    {
-        //Control의 DTO를 가져와 Activity에 반환하거나 xml에 표시해줘야함
-    }
-    public void deleteMemo()
-    {
-        //Toast.makeText(MemoInfoActivity.this, key + " is deleted.", Toast.LENGTH_SHORT).show();
-        DeleteMemo deleteMemo = new DeleteMemo();
-        deleteMemo.execute(key);
-
     }
 
     class DeleteMemo extends AsyncTask<Integer, Void, Boolean> {

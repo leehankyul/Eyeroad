@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -99,15 +100,14 @@ public class MemoControl extends BaseAdapter {
     }
 
     //DB에서 DTO를 가져오는 함수
-    public void getAllMemo(int deviceId)
+    public void getAllMemo()
     {
-        //deviceId에 따라 메모 선택부분 추가해야됨
+
         memoList = memoDAO.selectAll();
-        Log.d("TESTING","MemoControl memoList size : "+  memoList.size());
 
     }
 
-    public boolean setInfo(String title,Double x,Double y,Double z,String content, String date,String image,int iconId,String deviceID,int visibility)
+    public boolean setInfo(String title, Double x, Double y, Double z, String content, Date date, String image, int iconId, String deviceID, int visibility)
     {
         MemoDTO memoDTO = new MemoDTO();
         //memoDTO.setKey(memoKey);

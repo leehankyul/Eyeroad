@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -20,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MakingMemoAcitivity extends AppCompatActivity {
     private MemoControl control = MemoControl.getInstance();
@@ -103,10 +108,23 @@ public class MakingMemoAcitivity extends AppCompatActivity {
     }
     public void makeMemo()
     {
-
+        String deviceID = null;
         InsertMemo insertMemo = new InsertMemo();
-        insertMemo.execute(mTitleText.getText().toString(),"1","1","1",mBodyText.getText().toString(),"2010",mImageString,String.valueOf(mIconID),"deviceId",String.valueOf(mSelectedIndexSet));
 
+        //Device ID를 가져오는 부분
+        try {
+            deviceID = String.valueOf(Build.class.getField("SERIAL").get(null));
+        } catch (Exception ignored) {
+            ignored.getMessage();
+        }
+
+        Date date = new Date();
+        //date->string 처리
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+        String stringDate = sdFormat.format(date);
+
+        insertMemo.execute(mTitleText.getText().toString(),"1","1","1",mBodyText.getText().toString(),stringDate,mImageString,String.valueOf(mIconID),deviceID,String.valueOf(mSelectedIndexSet));
+        finish();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -160,11 +178,20 @@ public class MakingMemoAcitivity extends AppCompatActivity {
             Double y = Double.valueOf(params[2]);
             Double z = Double.valueOf(params[3]);
             String content = (String)params[4];
-            String date = (String)params[5];
+            String stringDate = (String)params[5];
             String image = (String)params[6];
             int iconId = Integer.valueOf(params[7]);
             String deviceID = (String)params[8];
             int visibility = Integer.valueOf(params[9]);
+
+            //String -> date 변환
+            DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = new Date();
+            try {
+                date = sdFormat.parse(stringDate);
+            }catch(ParseException e){
+                e.getMessage();
+            }
 
             return control.setInfo(title,x,y,z,content,date,image,iconId,deviceID,visibility);
         }

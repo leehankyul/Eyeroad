@@ -39,11 +39,10 @@ public class MemoManagementActivity extends AppCompatActivity {
     //List내용을 xml에 추가하는 부분
     public void setupListView()
     {
-        int deviceId = 1;
-        SelectAllMemo selectAllMemo = new SelectAllMemo();
-        selectAllMemo.execute(deviceId);
 
-        //Toast.makeText(MemoManagementActivity.this,"cal", Toast.LENGTH_SHORT).show();
+        SelectAllMemo selectAllMemo = new SelectAllMemo();
+        selectAllMemo.execute();
+
     }
 
     public void memoClicked() {
@@ -63,7 +62,7 @@ public class MemoManagementActivity extends AppCompatActivity {
     }
 
 
-    class SelectAllMemo extends AsyncTask<Integer, Void, String> {
+    class SelectAllMemo extends AsyncTask<Void, Void, Void> {
         ProgressDialog loading;
 
         @Override
@@ -71,30 +70,32 @@ public class MemoManagementActivity extends AppCompatActivity {
             super.onPreExecute();
             loading = new ProgressDialog(MemoManagementActivity.this);
             loading.setMessage("불러오는 중입니다.");
+
             listView = (ListView) findViewById(R.id.memoManagementListview1);
+
             control = MemoControl.getInstance();
-            //loading.setProgressStyle(loading.STYLE_SPINNER);
 
             loading.show();
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
             loading.dismiss();
+
             listView.setAdapter(control);
+
             memoClicked();
-            Toast.makeText(getApplicationContext(), "메모를 불러왔습니다", Toast.LENGTH_LONG).show();
 
         }
 
 
         @Override
-        protected String doInBackground(Integer... params) {
+        protected Void doInBackground(Void... params) {
 
-            control.getAllMemo(params[0]);
+            control.getAllMemo();
 
-            return "success";
+            return null;
         }
     }
 }

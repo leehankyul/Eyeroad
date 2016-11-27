@@ -279,69 +279,53 @@ public class MeetingDAO extends DAO{
 
     public ArrayList<MeetingDTO> selectAll()
     {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
 
-            @Override
-            protected String doInBackground(String... params) {
+        try {
 
-                String uri = params[0];
+            BufferedReader bufferedReader = null;
+            String link = "http://210.94.194.201/selectAllMeeting.php";
 
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(uri);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
+            URL url = new URL(link);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            StringBuilder sb = new StringBuilder();
 
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                    String json;
-                    while((json = bufferedReader.readLine())!= null){
-                        sb.append(json+"\n");
-                    }
-
-                    return sb.toString().trim();
-
-                }catch(Exception e){
-                    return null;
-                }
+            String json;
+            while ((json = bufferedReader.readLine()) != null) {
+                sb.append(json + "\n");
             }
 
-            @Override
-            protected void onPostExecute(String result){
-                arrayListMeetingDTO.clear();//업데이트를 위한 초기화부분
+            String result = sb.toString().trim();
+            arrayListMeetingDTO.clear();//업데이트를 위한 초기화부분
 
-                try{
-                    JSONObject jsonObj = new JSONObject(result);
-                    JSONArray jsonArrayMeetingDTO = null;
-                    jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
+            JSONObject jsonObj = new JSONObject(result);
+            JSONArray jsonArrayMeetingDTO = null;
+            jsonArrayMeetingDTO = jsonObj.getJSONArray("result");
 
-                    for(int i=0;i<jsonArrayMeetingDTO.length();i++) {
+            for (int i = 0; i < jsonArrayMeetingDTO.length(); i++) {
 
-                        //MeetingDTO 객체를 생성
-                        MeetingDTO meetingDTO = new MeetingDTO();
+                //MeetingDTO 객체를 생성
+                MeetingDTO meetingDTO = new MeetingDTO();
 
-                        JSONObject c = jsonArrayMeetingDTO.getJSONObject(i);
-                        //MeetingDTO 객체에 정보 삽입
-                        meetingDTO.setKey(Integer.parseInt(c.getString("meetingKey")));
-                        meetingDTO.setTitle(c.getString("title"));
-                        meetingDTO.setPlaceName(c.getString("placeName"));
-                        meetingDTO.setMeetingInfo(c.getString("meetingInfo"));
-                        meetingDTO.setPublisher(c.getString("publisher"));
-                        meetingDTO.setPassword(c.getString("password"));
+                JSONObject c = jsonArrayMeetingDTO.getJSONObject(i);
+                //MeetingDTO 객체에 정보 삽입
+                meetingDTO.setKey(Integer.parseInt(c.getString("meetingKey")));
+                meetingDTO.setTitle(c.getString("title"));
+                meetingDTO.setPlaceName(c.getString("placeName"));
+                meetingDTO.setMeetingInfo(c.getString("meetingInfo"));
+                meetingDTO.setPublisher(c.getString("publisher"));
+                meetingDTO.setPassword(c.getString("password"));
 
-                        //MeetingDTO 객체를 ArrayList에 삽입
-                        arrayListMeetingDTO.add(meetingDTO);
+                //MeetingDTO 객체를 ArrayList에 삽입
+                arrayListMeetingDTO.add(meetingDTO);
 
-                    }
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute("http://210.94.194.201/selectAllMeeting.php");
-
+        }catch(Exception e){
+                return null;
+            }
         return arrayListMeetingDTO;
+
     }
     /*public ArrayList<MeetingDTO> selectAll()
     {

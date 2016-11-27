@@ -1,6 +1,6 @@
 package kr.soen.mypart;
 
-import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,7 +13,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Jin on 2016-11-17.
@@ -31,11 +34,15 @@ public class MemoDAO extends DAO{
         String y = String.valueOf(dto.getY());
         String z = String.valueOf(dto.getZ());
         String content = dto.getContent();
-        String date = dto.getDate();
+        Date date = dto.getDate();
         String image = dto.getImage();
         String iconId = String.valueOf(dto.getIconId());
         String deviceID = dto.getDeviceID();
         String visibility = String.valueOf(dto.getVisibility());
+
+        //date->string 처리
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+        String stringDate = sdFormat.format(date);
 
         try {
             String link = "http://210.94.194.201/insertMemo.php";
@@ -46,7 +53,7 @@ public class MemoDAO extends DAO{
             data += "&" + URLEncoder.encode("y", "UTF-8") + "=" + URLEncoder.encode(y, "UTF-8");
             data += "&" + URLEncoder.encode("z", "UTF-8") + "=" + URLEncoder.encode(z, "UTF-8");
             data += "&" + URLEncoder.encode("content", "UTF-8") + "=" + URLEncoder.encode(content, "UTF-8");
-            data += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(date, "UTF-8");
+            data += "&" + URLEncoder.encode("date", "UTF-8") + "=" + URLEncoder.encode(stringDate, "UTF-8");
             data += "&" + URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(image, "UTF-8");
             data += "&" + URLEncoder.encode("iconId", "UTF-8") + "=" + URLEncoder.encode(iconId, "UTF-8");
             data += "&" + URLEncoder.encode("deviceID", "UTF-8") + "=" + URLEncoder.encode(deviceID, "UTF-8");
@@ -148,6 +155,10 @@ public class MemoDAO extends DAO{
 
             JSONObject c = memoInfo.getJSONObject(0);
 
+            //string->date 변환
+            DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdFormat.parse(c.getString("date"));
+
             MemoDTO selectedMemoDTO=new MemoDTO();
 
             selectedMemoDTO.setTitle(c.getString("title"));
@@ -155,7 +166,7 @@ public class MemoDAO extends DAO{
             selectedMemoDTO.setY(Double.valueOf(c.getString("y")));
             selectedMemoDTO.setZ(Double.valueOf(c.getString("z")));
             selectedMemoDTO.setContent(c.getString("content"));
-            selectedMemoDTO.setDate(c.getString("date"));
+            selectedMemoDTO.setDate(date);
             selectedMemoDTO.setImage(c.getString("image"));
             selectedMemoDTO.setIconId(Integer.valueOf(c.getString("iconId")));
             selectedMemoDTO.setDeviceID(c.getString("deviceID"));
@@ -174,10 +185,23 @@ public class MemoDAO extends DAO{
         try {
 
             BufferedReader bufferedReader = null;
+            String deviceID;
+            //Device ID를 가져오는 부분
+
+            deviceID = String.valueOf(Build.class.getField("SERIAL").get(null));
+
             String link = "http://210.94.194.201/selectAllMemo.php";
+            String data  = URLEncoder.encode("deviceID", "UTF-8") + "=" + URLEncoder.encode(deviceID, "UTF-8");
 
             URL url = new URL(link);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            con.setDoOutput(true);
+            OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+
+            wr.write( data );
+            wr.flush();
+
             StringBuilder sb = new StringBuilder();
 
             bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -202,17 +226,24 @@ public class MemoDAO extends DAO{
 
                 JSONObject c = jsonArrayMemoDTO.getJSONObject(i);
 
+                //string -> date 변환
+                DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+                Date date = sdFormat.parse(c.getString("date"));
+
                 memoDTO.setKey(Integer.parseInt(c.getString("memoKey")));
                 memoDTO.setTitle(c.getString("title"));
                 memoDTO.setX(Double.parseDouble(c.getString("x")));
                 memoDTO.setY(Double.parseDouble(c.getString("y")));
                 memoDTO.setZ(Double.parseDouble(c.getString("z")));
                 memoDTO.setContent(c.getString("content"));
-                memoDTO.setDate(c.getString("date"));
+                memoDTO.setDate(date);
                 memoDTO.setImage(c.getString("image"));
                 memoDTO.setIconId(Integer.parseInt(c.getString("iconId")));
                 memoDTO.setDeviceID(c.getString("deviceID"));
                 memoDTO.setVisibility(Integer.parseInt(c.getString("visibility")));
+
+
+
                 arrayListMemoDTO.add(memoDTO);
             }
                 return arrayListMemoDTO;

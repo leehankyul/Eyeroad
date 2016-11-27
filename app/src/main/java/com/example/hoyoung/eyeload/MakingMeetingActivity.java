@@ -57,6 +57,7 @@ public class MakingMeetingActivity extends Activity {
 
         InsertMeeting insertMeeting = new InsertMeeting();
         insertMeeting.execute(title,placeName,meetingInfo,publisher,password);
+        finish();
 
     }
     class InsertMeeting extends AsyncTask<String, Void, Boolean> {
