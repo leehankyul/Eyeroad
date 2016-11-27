@@ -1,0 +1,29 @@
+<?php
+
+	$con=mysqli_connect("127.0.0.1","root","6109","EyeRoad");
+	mysqli_set_charset($con,"utf8");
+
+	if (mysqli_connect_errno($con))  
+	{
+		echo "Failed to connect to MySQL: " . mysqli_connect_error();  
+}
+  
+	$key = $_POST['key'];
+	$placeName = $_POST['placeName'];
+	$meetingInfo = $_POST['meetingInfo'];
+	$publisher = $_POST['publisher'];
+	$password = $_POST['password'];
+
+	$result = mysqli_query($con,"insert into Person (key, placeName, meetingInfo, publisher, password) values ('$key','$placeName','meetingInfo','publisher','password')");
+
+	if($result)
+	{  
+		echo 'success';  
+	}
+	else
+	{ 
+		echo 'failure';  
+	}
+
+	mysqli_close($con);  
+?>

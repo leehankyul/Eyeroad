@@ -1,6 +1,11 @@
 package com.example.hoyoung.eyeload;
 
+
 import android.media.Image;
+
+/**
+ * Created by Jin on 2016-11-5.
+ */
 
 public class BuildingDTO extends DTO {
 

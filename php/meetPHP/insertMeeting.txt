@@ -1,0 +1,34 @@
+<?php
+
+	$con=mysqli_connect("127.0.0.1","root","6109","EyeRoad");
+	mysqli_set_charset($con,"utf8");
+
+	if (mysqli_connect_errno($con))  
+	{
+		echo "Failed to connect to MySQL: " . mysqli_connect_error();  
+}
+  
+	#$meetingKey = $_POST['meetingKey'];
+	$title = $_POST['title'];
+	$placeName = $_POST['placeName'];
+	$meetingInfo = $_POST['meetingInfo'];
+	$publisher = $_POST['publisher'];
+	$password = $_POST['password'];
+
+	if($title != null)
+	{
+		#$result = mysqli_query($con,"insert into Meeting (meetingKey,title, placeName, meetingInfo, publisher, password) values ('$meetingKey','$title','$placeName','$meetingInfo','$publisher','$password')");
+		$result = mysqli_query($con,"insert into Meeting (title, placeName, meetingInfo, publisher, password) values ('$title','$placeName','$meetingInfo','$publisher','$password')");
+	}
+
+	if($result)
+	{  
+		echo 'success';  
+	}
+	else
+	{ 
+		echo 'failure';  
+	}
+
+	mysqli_close($con);  
+?>
